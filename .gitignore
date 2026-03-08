@@ -1,0 +1,45 @@
+# Object files
+*.o
+*.obj
+
+# Executables
+*.out
+*.app
+
+# Libraries
+*.a
+*.so
+*.dll
+*.dylib
+
+# Debug files
+*.dSYM/
+*.stackdump
+
+# Build directories
+/build/
+/bin/
+/lib/
+
+# Dependency files
+*.d
+
+# Generated files
+*.log
+*.gcda
+*.gcno
+*.gcov
+
+# CMake files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Autotools files
+/configure
+/config.log
+/config.status
+
+# Other
+tags
