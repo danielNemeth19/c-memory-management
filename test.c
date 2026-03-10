@@ -6,6 +6,7 @@
 
 static int float_equal(float a, float b) { return fabs(a - b) < 0.0001f; };
 static int string_equal(const char *a, const char *b) { return strcmp(a, b) == 0; };
+static int int_equal(int a, int b) { return (a - b) == 0; };
 
 static void test_get_average(void) {
   assert(float_equal(get_average(3, 4, 5), 4.0f));
@@ -21,17 +22,27 @@ static void test_snek_score(void) {
 }
 
 static void test_get_temperature_status(void) {
-  char *t = get_temperature_status(50);
   assert(string_equal(get_temperature_status(50), "too cold"));
   assert(string_equal(get_temperature_status(100), "too hot"));
   assert(string_equal(get_temperature_status(70), "just right"));
   assert(string_equal(get_temperature_status(75), "just right"));
 }
 
+static void test_can_access_registry(void) {
+    assert(int_equal(can_access_registry(1, 120, 1), 1));
+    assert(int_equal(can_access_registry(1, 0, 0), 1));
+    assert(int_equal(can_access_registry(0, 100, 1), 1));
+    assert(int_equal(can_access_registry(0, 150, 0), 0));
+    assert(int_equal(can_access_registry(0, 50, 1), 0));
+    assert(int_equal(can_access_registry(1, 50, 1), 1));
+    assert(int_equal(can_access_registry(0, 20, 0), 0));
+}
+
 int main(void) {
   test_get_average();
   test_snek_score();
   test_get_temperature_status();
+  test_can_access_registry();
   printf("All tests passed.\n");
   return 0;
 }
