@@ -1,11 +1,13 @@
 #include "exercise_1.h"
 #include <assert.h>
-#include <string.h>
 #include <math.h>
 #include <stdio.h>
+#include <string.h>
 
 static int float_equal(float a, float b) { return fabs(a - b) < 0.0001f; };
-static int string_equal(const char *a, const char *b) { return strcmp(a, b) == 0; };
+static int string_equal(const char *a, const char *b) {
+  return strcmp(a, b) == 0;
+};
 static int int_equal(int a, int b) { return (a - b) == 0; };
 
 static void test_get_average(void) {
@@ -29,13 +31,25 @@ static void test_get_temperature_status(void) {
 }
 
 static void test_can_access_registry(void) {
-    assert(int_equal(can_access_registry(1, 120, 1), 1));
-    assert(int_equal(can_access_registry(1, 0, 0), 1));
-    assert(int_equal(can_access_registry(0, 100, 1), 1));
-    assert(int_equal(can_access_registry(0, 150, 0), 0));
-    assert(int_equal(can_access_registry(0, 50, 1), 0));
-    assert(int_equal(can_access_registry(1, 50, 1), 1));
-    assert(int_equal(can_access_registry(0, 20, 0), 0));
+  assert(int_equal(can_access_registry(1, 120, 1), 1));
+  assert(int_equal(can_access_registry(1, 0, 0), 1));
+  assert(int_equal(can_access_registry(0, 100, 1), 1));
+  assert(int_equal(can_access_registry(0, 150, 0), 0));
+  assert(int_equal(can_access_registry(0, 50, 1), 0));
+  assert(int_equal(can_access_registry(1, 50, 1), 1));
+  assert(int_equal(can_access_registry(0, 20, 0), 0));
+}
+
+void test_print(int start, int end) {
+  printf("Printing from %d to %d:\n", start, end);
+  print_numbers(start, end);
+  printf("=====================\n");
+}
+
+void test_print_reverse(int start, int end) {
+  printf("Printing from %d to %d:\n", start, end);
+  print_numbers_reverse(start, end);
+  printf("=====================\n");
 }
 
 int main(void) {
@@ -43,6 +57,8 @@ int main(void) {
   test_snek_score();
   test_get_temperature_status();
   test_can_access_registry();
+  test_print(42, 69);
+  test_print_reverse(10, 5);
   printf("All tests passed.\n");
   return 0;
 }
