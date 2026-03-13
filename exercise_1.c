@@ -58,3 +58,11 @@ void print_numbers_reverse(int start, int end) {
     i--;
   }
 }
+
+void print_numbers_reverse_do_while(int start, int end) {
+  int i = start;
+  do {
+    printf("current number is: %d\n", i);
+    i--;
+  } while (i >= end);
+}

@@ -52,6 +52,12 @@ void test_print_reverse(int start, int end) {
   printf("=====================\n");
 }
 
+void test_print_reverse_do_while(int start, int end) {
+  printf("Printing from %d to %d:\n", start, end);
+  print_numbers_reverse_do_while(start, end);
+  printf("=====================\n");
+}
+
 int main(void) {
   test_get_average();
   test_snek_score();
@@ -59,6 +65,7 @@ int main(void) {
   test_can_access_registry();
   test_print(42, 69);
   test_print_reverse(10, 5);
+  test_print_reverse_do_while(0, 5);
   printf("All tests passed.\n");
   return 0;
 }

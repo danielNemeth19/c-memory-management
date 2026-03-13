@@ -13,5 +13,6 @@ int can_access_registry(int is_premium, int reputation, int has_2fa);
 void print_numbers(int start, int end);
 
 void print_numbers_reverse(int start, int end);
+void print_numbers_reverse_do_while(int start, int end);
 
 #endif
