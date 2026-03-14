@@ -2,27 +2,27 @@
 #include <stdio.h>
 
 float get_average(int x, int y, int z) {
-  int sum = x + y + z;
-  float avg = sum / 3.0f;
-  return avg;
+    int sum = x + y + z;
+    float avg = sum / 3.0f;
+    return avg;
 }
 
 float snek_score(int num_files, int num_contributors, int num_commits,
                  float avg_bug_criticality) {
-  int size_factor = num_files * num_commits;
-  int complexity_factor = size_factor + num_contributors;
-  float snek_score = complexity_factor * avg_bug_criticality;
-  return snek_score;
+    int size_factor = num_files * num_commits;
+    int complexity_factor = size_factor + num_contributors;
+    float snek_score = complexity_factor * avg_bug_criticality;
+    return snek_score;
 }
 
 char *get_temperature_status(int temp) {
-  if (temp < 51) {
-    return "too cold";
-  }
-  if (temp > 99) {
-    return "too hot";
-  }
-  return "just right";
+    if (temp < 51) {
+        return "too cold";
+    }
+    if (temp > 99) {
+        return "too hot";
+    }
+    return "just right";
 }
 
 /* ---- Operator Precedence ----
@@ -41,28 +41,28 @@ parentheses too
 
 */
 int can_access_registry(int is_premium, int reputation, int has_2fa) {
-  int verdict = is_premium || (reputation >= 100 && has_2fa);
-  return verdict;
+    int verdict = is_premium || (reputation >= 100 && has_2fa);
+    return verdict;
 }
 
 void print_numbers(int start, int end) {
-  for (int i = start; i < end + 1; i++) {
-    printf("current number is: %d\n", i);
-  }
+    for (int i = start; i < end + 1; i++) {
+        printf("current number is: %d\n", i);
+    }
 }
 
 void print_numbers_reverse(int start, int end) {
-  int i = start;
-  while (i >= end) {
-    printf("current number is: %d\n", i);
-    i--;
-  }
+    int i = start;
+    while (i >= end) {
+        printf("current number is: %d\n", i);
+        i--;
+    }
 }
 
 void print_numbers_reverse_do_while(int start, int end) {
-  int i = start;
-  do {
-    printf("current number is: %d\n", i);
-    i--;
-  } while (i >= end);
+    int i = start;
+    do {
+        printf("current number is: %d\n", i);
+        i--;
+    } while (i >= end);
 }
