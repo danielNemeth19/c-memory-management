@@ -42,10 +42,18 @@ static void test_can_access_registry(void) {
 }
 
 static void test_coord_struct(void) {
-    struct Coordinate cord = new_coord(10, 20, 30);
+    coordinate_t cord = new_coord(10, 20, 30);
     assert(int_equal(cord.x, 10));
     assert(int_equal(cord.y, 20));
     assert(int_equal(cord.z, 30));
+}
+
+static void test_coord_scale(void) {
+    coordinate_t cord = new_coord(10, 20, 30);
+    cord = scale_coordinate(cord, 2);
+    assert(int_equal(cord.x, 20));
+    assert(int_equal(cord.y, 40));
+    assert(int_equal(cord.z, 60));
 }
 
 void test_print(int start, int end) {
@@ -67,14 +75,15 @@ void test_print_reverse_do_while(int start, int end) {
 }
 
 int main(void) {
+    test_print(42, 69);
+    test_print_reverse(10, 5);
+    test_print_reverse_do_while(0, 5);
     test_get_average();
     test_snek_score();
     test_get_temperature_status();
     test_can_access_registry();
     test_coord_struct();
+    test_coord_scale();
     printf("All tests passed.\n");
-    test_print(42, 69);
-    test_print_reverse(10, 5);
-    test_print_reverse_do_while(0, 5);
     return 0;
 }

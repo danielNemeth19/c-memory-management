@@ -15,4 +15,13 @@ void print_numbers(int start, int end);
 void print_numbers_reverse(int start, int end);
 void print_numbers_reverse_do_while(int start, int end);
 
+typedef struct SneklangVar {
+    double weight;
+    int value;
+    int scope_level;
+    char *name;
+    char type;
+    char is_constant;
+} sneklang_var_t;
+
 #endif

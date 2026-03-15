@@ -1,9 +1,11 @@
 #pragma once
 
-struct Coordinate {
-  int x;
-  int y;
-  int z;
-};
+typedef struct Coordinate {
+    int x;
+    int y;
+    int z;
+} coordinate_t;
 
-struct Coordinate new_coord(int x, int y, int z);
+coordinate_t new_coord(int x, int y, int z);
+
+coordinate_t scale_coordinate(coordinate_t coord, int factor);
