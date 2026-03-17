@@ -1,5 +1,6 @@
 #include "coord.h"
 #include "exercise_1.h"
+#include "snek.h"
 #include <assert.h>
 #include <math.h>
 #include <stdio.h>
@@ -54,6 +55,20 @@ static void test_coord_scale(void) {
     assert(int_equal(cord.x, 20));
     assert(int_equal(cord.y, 40));
     assert(int_equal(cord.z, 60));
+}
+
+static void test_size_of_addr(void) {
+    unsigned long size_1 = size_of_addr(16);
+    assert(int_equal(size_1, 4));
+
+    unsigned long size_2 = size_of_addr(32);
+    assert(int_equal(size_2, 4));
+
+    unsigned long size_3 = size_of_addr(64);
+    assert(int_equal(size_3, 4));
+
+    unsigned long size_4 = size_of_addr(128);
+    assert(int_equal(size_4, 4));
 }
 
 void test_print(int start, int end) {

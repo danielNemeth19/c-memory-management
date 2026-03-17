@@ -4,10 +4,10 @@ build:
 	gcc main.c -o main
 
 test:
-	gcc exercise_1.c coord.c test.c -o test_suite && ./test_suite
+	gcc exercise_1.c coord.c snek.c test.c -o test_suite && ./test_suite
 
 build-test:
-	gcc exercise_1.c coord.c test.c -o test_suite
+	gcc exercise_1.c coord.c snek.c test.c -o test_suite
 
 clean:
 	rm -rf test_suite main *.o
