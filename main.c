@@ -14,4 +14,14 @@ int main() {
     printf("sizeof(size_t) = %zu\n", sizeof(size_t));
     printf("sizeof(coordinate_t) = %zu\n", sizeof(coordinate_t));
     printf("sizeof(sneklang_var_t) = %zu\n", sizeof(sneklang_var_t));
+
+    int n = 15;
+    int *pointer_to_n = &n;
+    printf("value of *pointer_to_n is %p\n", pointer_to_n);
+    printf("value of pointer: %d\n", *pointer_to_n);
+    
+    char k = 'k';
+    char *pointer_to_k = &k;
+    printf("value of *pointer_to_k is %p\n", pointer_to_k);
+    printf("value of pointer: %d\n", *pointer_to_k);
 }

@@ -59,16 +59,29 @@ static void test_coord_scale(void) {
 
 static void test_size_of_addr(void) {
     unsigned long size_1 = size_of_addr(16);
-    assert(int_equal(size_1, 4));
+    assert(int_equal(size_1, 8));
 
     unsigned long size_2 = size_of_addr(32);
-    assert(int_equal(size_2, 4));
+    assert(int_equal(size_2, 8));
 
     unsigned long size_3 = size_of_addr(64);
-    assert(int_equal(size_3, 4));
+    assert(int_equal(size_3, 8));
 
     unsigned long size_4 = size_of_addr(128);
-    assert(int_equal(size_4, 4));
+    assert(int_equal(size_4, 8));
+}
+
+void test_coordinate_update(void) {
+    coordinate_t c1 = new_coord(1, 2, 3);
+    coordinate_update_x(c1, 5);
+    assert(int_equal(c1.x, 1));
+
+    coordinate_t c2 = new_coord(1, 2, 3);
+    coordinate_t c3 = coordinate_update_and_return_x(c2, 10);
+    assert(int_equal(c2.x, 1));
+    assert(int_equal(c3.x, 10));
+    // Addresses are not the same
+    assert(&c2 != &c3);
 }
 
 void test_print(int start, int end) {
@@ -99,6 +112,8 @@ int main(void) {
     test_can_access_registry();
     test_coord_struct();
     test_coord_scale();
+    test_size_of_addr();
+    test_coordinate_update();
     printf("All tests passed.\n");
     return 0;
 }
