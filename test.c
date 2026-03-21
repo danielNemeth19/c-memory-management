@@ -84,6 +84,33 @@ void test_coordinate_update(void) {
     assert(&c2 != &c3);
 }
 
+void test_change_filetype_cpp_to_python(void) {
+    codefile_t original;
+    original.lines = 100;
+    original.filetype = 1;
+    codefile_t result = change_filetype(&original, 2);
+    assert(int_equal(result.filetype, 2));
+    assert(int_equal(result.lines, 100));
+}
+
+void test_change_filetype_same_type(void) {
+    codefile_t original;
+    original.lines = 40;
+    original.filetype = 3;
+    codefile_t result = change_filetype(&original, 3);
+    assert(int_equal(result.filetype, 3));
+    assert(int_equal(result.lines, 40));
+}
+
+void test_change_filetype_no_mutation(void) {
+    codefile_t original;
+    original.lines = 40;
+    original.filetype = 7;
+    codefile_t result = change_filetype(&original, 8);
+    assert(int_equal(result.filetype, 8));
+    assert(int_equal(original.filetype, 7));
+}
+
 void test_print(int start, int end) {
     printf("Printing from %d to %d:\n", start, end);
     print_numbers(start, end);
@@ -114,6 +141,9 @@ int main(void) {
     test_coord_scale();
     test_size_of_addr();
     test_coordinate_update();
+    test_change_filetype_cpp_to_python();
+    test_change_filetype_same_type();
+    test_change_filetype_no_mutation();
     printf("All tests passed.\n");
     return 0;
 }

@@ -24,4 +24,11 @@ typedef struct SneklangVar {
     char is_constant;
 } sneklang_var_t;
 
+typedef struct CodeFile {
+    int lines;
+    int filetype;
+} codefile_t;
+
+codefile_t change_filetype(codefile_t *f, int new_filetype);
+
 #endif

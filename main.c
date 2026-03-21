@@ -1,8 +1,8 @@
+#include "coord.h"
+#include "exercise_1.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
-#include "coord.h"
-#include "exercise_1.h"
 
 int main() {
     printf("sizeof(char) = %zu\n", sizeof(char));
@@ -17,11 +17,11 @@ int main() {
 
     int n = 15;
     int *pointer_to_n = &n;
-    printf("value of *pointer_to_n is %p\n", pointer_to_n);
+    printf("address stored in pointer_to_n is %p\n", pointer_to_n);
     printf("value of pointer: %d\n", *pointer_to_n);
-    
+
     char k = 'k';
     char *pointer_to_k = &k;
-    printf("value of *pointer_to_k is %p\n", pointer_to_k);
-    printf("value of pointer: %d\n", *pointer_to_k);
+    printf("address stored in pointer_to_k is %p\n", pointer_to_k);
+    printf("value of pointer: %c\n", *pointer_to_k);
 }

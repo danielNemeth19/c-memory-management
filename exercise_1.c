@@ -66,3 +66,12 @@ void print_numbers_reverse_do_while(int start, int end) {
         i--;
     } while (i >= end);
 }
+
+/* pointer is passed in so no automatic copy created automatically
+   but still allocates a new struct, leaving the original untouched
+   eventhough the pointer would allow us to modify the struct in place */
+codefile_t change_filetype(codefile_t *f, int new_filetype) {
+    codefile_t new_f = *f;
+    new_f.filetype = new_filetype;
+    return new_f;
+}

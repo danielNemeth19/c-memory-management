@@ -1,13 +1,13 @@
 .PHONY: build test build-test clean
 
 build:
-	gcc main.c -o main
+	gcc main.c -o main.o
 
 test:
 	gcc exercise_1.c coord.c snek.c test.c -o test_suite && ./test_suite
 
 build-test:
-	gcc exercise_1.c coord.c snek.c test.c -o test_suite
+	gcc exercise_1.c coord.c snek.c test.c -o test_suite.o
 
 clean:
 	rm -rf test_suite main *.o
