@@ -24,4 +24,18 @@ int main() {
     char *pointer_to_k = &k;
     printf("address stored in pointer_to_k is %p\n", pointer_to_k);
     printf("value of pointer: %c\n", *pointer_to_k);
+
+    /* Initializing struct based on position is also possible
+     designated initalization would be: coordinate_t c = {.x = x, .y = y, .z = z};
+     */
+    coordinate_t point = {10, 20, 30};
+    printf("X: %d\n", point.x);
+
+    coordinate_t *ptr_point = &point;
+    /*  the arrow syntax dereferences the pointer and access the field in one step*/
+    printf("X: %d as dereferenced pointer\n", ptr_point -> x);
+    /* the more verbose syntax - note that `.` has higher priority than `*`
+       which is why the parentheses are needed
+    */
+    printf("X: %d dereferencing pointer first, then accessing the field\n", (*ptr_point).x);
 }

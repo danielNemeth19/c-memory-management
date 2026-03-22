@@ -75,3 +75,15 @@ codefile_t change_filetype(codefile_t *f, int new_filetype) {
     new_f.filetype = new_filetype;
     return new_f;
 }
+
+void update_file(int filedata[200], int new_filetype, int new_num_lines) {
+    for (int i = 0; i < 200; i++) {
+        if (i == 1) {
+            filedata[i] = new_num_lines;
+        } else if (i == 2) {
+            filedata[i] = new_filetype;
+        } else if (i == 199) {
+            filedata[i] = 0;
+        }
+    }
+}

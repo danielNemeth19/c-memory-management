@@ -111,6 +111,27 @@ void test_change_filetype_no_mutation(void) {
     assert(int_equal(original.filetype, 7));
 }
 
+void test_loop_update_file(void) {
+    int filedata[200] = {0};
+    update_file(filedata, 1, 100);
+    assert(int_equal(filedata[1], 100));
+    assert(int_equal(filedata[2], 1));
+    assert(int_equal(filedata[199], 0));
+}
+
+void test_loop_update_file2(void) {
+    int filedata[200] = {0};
+    for (int i = 0; i < 200; i++) {
+        filedata[i] = 69;
+    }
+    update_file(filedata, 3, 250);
+    assert(int_equal(filedata[1], 250));
+    assert(int_equal(filedata[2], 3));
+    assert(int_equal(filedata[3], 69));
+    assert(int_equal(filedata[4], 69));
+    assert(int_equal(filedata[199], 0));
+}
+
 void test_print(int start, int end) {
     printf("Printing from %d to %d:\n", start, end);
     print_numbers(start, end);
@@ -144,6 +165,8 @@ int main(void) {
     test_change_filetype_cpp_to_python();
     test_change_filetype_same_type();
     test_change_filetype_no_mutation();
+    test_loop_update_file();
+    test_loop_update_file2();
     printf("All tests passed.\n");
     return 0;
 }

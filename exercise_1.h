@@ -31,4 +31,6 @@ typedef struct CodeFile {
 
 codefile_t change_filetype(codefile_t *f, int new_filetype);
 
+void update_file(int filedata[200], int new_filetype, int new_num_lines);
+
 #endif
