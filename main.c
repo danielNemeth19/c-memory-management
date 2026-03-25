@@ -38,4 +38,15 @@ int main() {
        which is why the parentheses are needed
     */
     printf("X: %d dereferencing pointer first, then accessing the field\n", (*ptr_point).x);
+
+    printf("Arrays as pointers\n");
+    int numbers[5] = {1, 2, 3, 4, 5};
+    int *numbers_ptr = numbers;
+    printf("The name `numbers` act as a pointer to the first element of the array: %p\n", numbers_ptr);
+    printf("numbers[2] = %d\n", numbers[2]);
+    printf("*(numbers + 2) =  %d\n", *(numbers + 2));
+
+    int *p = numbers + 2;
+    int value = *p;
+    printf("Pointer p points to numbers[2]: %d\n", *p);
 }
