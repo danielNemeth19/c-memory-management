@@ -41,12 +41,11 @@ int main() {
 
     printf("Arrays as pointers\n");
     int numbers[5] = {1, 2, 3, 4, 5};
-    int *numbers_ptr = numbers;
-    printf("The name `numbers` act as a pointer to the first element of the array: %p\n", numbers_ptr);
+    int *ptr = numbers;
+    printf("The name `numbers` act as a pointer to the first element of the array: %p\n", ptr);
     printf("numbers[2] = %d\n", numbers[2]);
     printf("*(numbers + 2) =  %d\n", *(numbers + 2));
 
-    int *p = numbers + 2;
-    int value = *p;
-    printf("Pointer p points to numbers[2]: %d\n", *p);
+    ptr += 2;
+    printf("Pointer arithmetic: ptr points now to numbers[2]: %d\n", *ptr);
 }
