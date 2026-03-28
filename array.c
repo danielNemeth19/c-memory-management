@@ -28,7 +28,21 @@ int multibyte_arrays(void) {
     return 0;
 }
 
+int array_casting(void) {
+    coordinate_t points[3] = {
+        {5, 4, 1},
+        {7, 3, 2},
+        {9, 6, 8},
+    };
+    int *points_start = (int *) points;
+    for (int x = 0; x < 9; x++) {
+        printf("x here is %d\n", points_start[x]);
+    };
+    return 0;
+}
+
 int main(void) {
     multibyte_arrays();
+    array_casting();
     return 0;
 }

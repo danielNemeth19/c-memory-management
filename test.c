@@ -132,6 +132,19 @@ void test_loop_update_file2(void) {
     assert(int_equal(filedata[199], 0));
 }
 
+void test_get_match_stats(void) {
+    int games_played = 0;
+    int points = 0;
+
+    get_match_stats(4, 2, 1, &games_played, &points);
+    assert(int_equal(games_played, 7));
+    assert(int_equal(points, 14));
+
+    get_match_stats(2, 3, 0, &games_played, &points);
+    assert(int_equal(games_played, 5));
+    assert(int_equal(points, 9));
+}
+
 void test_print(int start, int end) {
     printf("Printing from %d to %d:\n", start, end);
     print_numbers(start, end);
@@ -150,10 +163,20 @@ void test_print_reverse_do_while(int start, int end) {
     printf("=====================\n");
 }
 
+void test_print_dump_graphics(void) {
+    graphics_t graphics_array[10] = {
+        {60, 1080, 1920},  {30, 720, 1280},  {144, 1440, 2560}, {75, 900, 1600},
+        {120, 1080, 1920}, {60, 2160, 3840}, {240, 1080, 1920}, {60, 768, 1366},
+        {165, 1440, 2560}, {90, 1200, 1920},
+    };
+    dump_graphics(graphics_array);
+}
+
 int main(void) {
     test_print(42, 69);
     test_print_reverse(10, 5);
     test_print_reverse_do_while(0, 5);
+    test_print_dump_graphics();
     test_get_average();
     test_snek_score();
     test_get_temperature_status();
@@ -167,6 +190,7 @@ int main(void) {
     test_change_filetype_no_mutation();
     test_loop_update_file();
     test_loop_update_file2();
+    test_get_match_stats();
     printf("All tests passed.\n");
     return 0;
 }

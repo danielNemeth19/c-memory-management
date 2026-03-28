@@ -87,3 +87,18 @@ void update_file(int filedata[200], int new_filetype, int new_num_lines) {
         }
     }
 }
+
+void get_match_stats(int wins, int draws, int losses, int *games_played,
+                     int *points) {
+    int p = wins * 3 + draws * 1;
+    int g = wins + draws + losses;
+    *points = p;
+    *games_played = g;
+};
+
+void dump_graphics(graphics_t gsettings[10]) {
+    int *ptr = (int *)gsettings;
+    for (int i = 0; i < 30; i++) {
+        printf("settings[i] is: %d\n", ptr[i]);
+    };
+};
