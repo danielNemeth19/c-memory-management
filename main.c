@@ -48,4 +48,21 @@ int main() {
 
     ptr += 2;
     printf("Pointer arithmetic: ptr points now to numbers[2]: %d\n", *ptr);
+
+    int *intPrt;
+    char *charPtr;
+    double *doublePtr;
+
+    printf("Size of int pointer: %zu bytes\n", sizeof(intPrt));
+    printf("Size of char pointer: %zu bytes\n", sizeof(charPtr));
+    printf("Size of double pointer: %zu bytes\n", sizeof(doublePtr));
+
+    int intArray[10];
+    char charArray[10];
+    double doubleArray[10];
+
+    printf("Size of int array: %zu bytes\n", sizeof(intArray));
+    printf("Size of char array: %zu bytes\n", sizeof(charArray));
+    printf("Size of double array: %zu bytes\n", sizeof(doubleArray));
+
 }
