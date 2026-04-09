@@ -10,5 +10,5 @@ build-test:
 	gcc exercise_1.c coord.c snek.c test.c -o test_suite.o
 
 clean:
-	rm -rf test_suite main *.o
+	rm -rf *.o
 

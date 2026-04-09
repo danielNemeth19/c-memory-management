@@ -102,3 +102,10 @@ void dump_graphics(graphics_t gsettings[10]) {
         printf("settings[i] is: %d\n", ptr[i]);
     };
 };
+
+void concat_strings(char *str1, const char *str2) {
+    /* TODO: let's use a whle loop and pointer dereference to find the null terminator */
+    while (expression) {
+    
+    }
+}
