@@ -43,6 +43,6 @@ typedef struct Graphics{
 
 void dump_graphics(graphics_t gsettings[10]);
 
-void concat_strings(char *str1, const char *str2);
+void concat_strings(char *str1);
 
 #endif

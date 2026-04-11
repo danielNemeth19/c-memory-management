@@ -172,11 +172,17 @@ void test_print_dump_graphics(void) {
     dump_graphics(graphics_array);
 }
 
+void test_print_concat_strings(void) {
+    char mys[] = "ThisIsMyTest";
+    concat_strings(mys);
+}
+
 int main(void) {
     test_print(42, 69);
     test_print_reverse(10, 5);
     test_print_reverse_do_while(0, 5);
     test_print_dump_graphics();
+    test_print_concat_strings();
     test_get_average();
     test_snek_score();
     test_get_temperature_status();
