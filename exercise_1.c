@@ -103,16 +103,17 @@ void dump_graphics(graphics_t gsettings[10]) {
     };
 };
 
-void concat_strings(char *str1) {
+void concat_strings(char *str1, char *str2) {
     /* TODO: let's use a whle loop and pointer dereference to find the null terminator */
     char terminator = '\0';
-    char current_c = *str1;
-    int iterator = 0;
-    printf("the starter char: %c\n", current_c);
-    while (current_c != terminator) {
-        printf("current_c is: %c\n", current_c);
-        current_c = *(str1 + iterator);
-        printf("next is: %c\n", current_c);
-        iterator++;
+    int len_str1 = 0;
+    while (*(str1 + len_str1) != terminator) {
+        len_str1++;
     }
+    int len_str2 = 0;
+    while (*(str2 + len_str2) != terminator) {
+        *(str1 + len_str1 + len_str2) = *(str2 + len_str2);
+        len_str2++;
+    }
+    *(str1 + len_str1 + len_str2) = terminator;
 }
