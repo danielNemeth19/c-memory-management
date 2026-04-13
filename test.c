@@ -12,6 +12,33 @@ static int string_equal(const char *a, const char *b) {
 };
 static int int_equal(int a, int b) { return (a - b) == 0; };
 
+void test_print(int start, int end) {
+    printf("Printing from %d to %d:\n", start, end);
+    print_numbers(start, end);
+    printf("=====================\n");
+}
+
+void test_print_reverse(int start, int end) {
+    printf("Printing from %d to %d:\n", start, end);
+    print_numbers_reverse(start, end);
+    printf("=====================\n");
+}
+
+void test_print_reverse_do_while(int start, int end) {
+    printf("Printing from %d to %d:\n", start, end);
+    print_numbers_reverse_do_while(start, end);
+    printf("=====================\n");
+}
+
+void test_print_dump_graphics(void) {
+    graphics_t graphics_array[10] = {
+        {60, 1080, 1920},  {30, 720, 1280},  {144, 1440, 2560}, {75, 900, 1600},
+        {120, 1080, 1920}, {60, 2160, 3840}, {240, 1080, 1920}, {60, 768, 1366},
+        {165, 1440, 2560}, {90, 1200, 1920},
+    };
+    dump_graphics(graphics_array);
+}
+
 static void test_get_average(void) {
     assert(float_equal(get_average(3, 4, 5), 4.0f));
     assert(float_equal(get_average(3, 3, 5), 11.0f / 3.0f));
@@ -145,40 +172,54 @@ void test_get_match_stats(void) {
     assert(int_equal(points, 9));
 }
 
-void test_concat_strings(void) {
+void test_concat_strings_empty_strings(void) {
+    char str1[100] = "";
+    char *str2 = "";
+    concat_strings(str1, str2);
+    assert(string_equal(str1, ""));
+}
+
+void test_concat_strings_empty_to_nonempty(void) {
+    char str1[100] = "nonempty";
+    char *str2 = "";
+    concat_strings(str1, str2);
+    assert(string_equal(str1, "nonempty"));
+}
+
+void test_concat_strings_nonempty_to_empty(void) {
+    char str1[100] = "";
+    char *str2 = "nonempty";
+    concat_strings(str1, str2);
+    assert(string_equal(str1, "nonempty"));
+}
+
+void test_concat_small_strings(void) {
     char mys[] = "abc";
     char mys2[] = "def";
     concat_strings(mys, mys2);
     assert(string_equal(mys, "abcdef"));
 }
 
-void test_print(int start, int end) {
-    printf("Printing from %d to %d:\n", start, end);
-    print_numbers(start, end);
-    printf("=====================\n");
+void test_concat_long_strings(void) {
+    char str1[200] = "This is a longer string that ";
+    char *str2 = "will be concatened with another long string.";
+    concat_strings(str1, str2);
+    assert(string_equal(str1, "This is a longer string that will be concatened "
+                              "with another long string."));
 }
 
-void test_print_reverse(int start, int end) {
-    printf("Printing from %d to %d:\n", start, end);
-    print_numbers_reverse(start, end);
-    printf("=====================\n");
-}
+void test_concat_null_terminator_explicit(void) {
+    char str1[10];
+    memset(str1, 'x', sizeof(str1));
+    str1[0] = 'A';
+    str1[1] = 'B';
+    str1[2] = '\0';
 
-void test_print_reverse_do_while(int start, int end) {
-    printf("Printing from %d to %d:\n", start, end);
-    print_numbers_reverse_do_while(start, end);
-    printf("=====================\n");
+    char *str2 = "CD";
+    concat_strings(str1, str2);
+    assert(string_equal(str1, "ABCD"));
+    assert(str1[4] == '\0');
 }
-
-void test_print_dump_graphics(void) {
-    graphics_t graphics_array[10] = {
-        {60, 1080, 1920},  {30, 720, 1280},  {144, 1440, 2560}, {75, 900, 1600},
-        {120, 1080, 1920}, {60, 2160, 3840}, {240, 1080, 1920}, {60, 768, 1366},
-        {165, 1440, 2560}, {90, 1200, 1920},
-    };
-    dump_graphics(graphics_array);
-}
-
 
 int main(void) {
     test_print(42, 69);
@@ -199,7 +240,12 @@ int main(void) {
     test_loop_update_file();
     test_loop_update_file2();
     test_get_match_stats();
-    test_concat_strings();
+    test_concat_strings_empty_strings();
+    test_concat_strings_empty_to_nonempty();
+    test_concat_strings_nonempty_to_empty();
+    test_concat_small_strings();
+    test_concat_long_strings();
+    test_concat_null_terminator_explicit();
     printf("All tests passed.\n");
     return 0;
 }
