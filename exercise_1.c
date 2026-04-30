@@ -1,5 +1,7 @@
 #include "exercise_1.h"
+#include <stddef.h>
 #include <stdio.h>
+#include <string.h>
 
 float get_average(int x, int y, int z) {
     int sum = x + y + z;
@@ -104,7 +106,7 @@ void dump_graphics(graphics_t gsettings[10]) {
 };
 
 void concat_strings(char *str1, char *str2) {
-    /* TODO: let's use a whle loop and pointer dereference to find the null terminator */
+    /* let's use a while loop and pointer dereference to find the null terminator */
     char terminator = '\0';
     int len_str1 = 0;
     while (*(str1 + len_str1) != terminator) {
@@ -116,4 +118,14 @@ void concat_strings(char *str1, char *str2) {
         len_str2++;
     }
     *(str1 + len_str1 + len_str2) = terminator;
+}
+
+int smart_append(TextBuffer *dest, const char *src) {
+    if (dest == NULL | src == NULL) {
+        return 1;
+    }
+    const int buffer_len = 64;
+    size_t len_src = strlen(src);
+    dest->length += len_src;
+    return 0;
 }

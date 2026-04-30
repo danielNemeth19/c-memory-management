@@ -221,6 +221,19 @@ void test_concat_null_terminator_explicit(void) {
     assert(str1[4] == '\0');
 }
 
+void test_smart_append(void) {
+    assert(float_equal(smart_append(NULL, NULL), 1));
+    char *str = "ABC";
+    assert(float_equal(smart_append(NULL, str), 1));
+    TextBuffer tb = { .length = 0, .buffer = "" };
+    assert(float_equal(smart_append(&tb, NULL), 1));
+
+    TextBuffer tb2 = { .length = 0, .buffer = "" };
+    char *str2 = "MYSTRING";
+    smart_append(&tb2, str2);
+    assert(float_equal(tb2.length, 8));
+}
+
 int main(void) {
     test_print(42, 69);
     test_print_reverse(10, 5);
@@ -246,6 +259,7 @@ int main(void) {
     test_concat_small_strings();
     test_concat_long_strings();
     test_concat_null_terminator_explicit();
+    test_smart_append();
     printf("All tests passed.\n");
     return 0;
 }

@@ -15,9 +15,9 @@ int built_ins(void) {
 
     // Copies a specified number of chars from one string to another
     strncpy(dest2, src2, 3);
-    printf("copy result: %s\n", dest2);
     // ensure null termination
     dest2[3] = '\0';
+    printf("copy result: %s\n", dest2);
 
     // Concatenates one string to another
     char dest3[12] = "Hello";
