@@ -124,8 +124,20 @@ int smart_append(TextBuffer *dest, const char *src) {
     if (dest == NULL | src == NULL) {
         return 1;
     }
+    char terminator = '\0';
     const int buffer_len = 64;
     size_t len_src = strlen(src);
-    dest->length += len_src;
-    return 0;
+    size_t free_slots = buffer_len - strlen(&terminator) - dest->length;
+    if (free_slots > len_src) {
+        printf("Enough space: free (%zu) len (%zu)\n", free_slots, len_src);
+        strcat(dest->buffer, src);
+        dest->length += len_src;
+        return 0;
+    } else {
+        printf("Not enough space in the buffer: free (%zu) len (%zu)\n", free_slots, len_src);
+        strncat(dest->buffer, src, free_slots);
+        dest->buffer[buffer_len - 1] = terminator;
+        dest->length = buffer_len;
+        return 1;
+    }
 }

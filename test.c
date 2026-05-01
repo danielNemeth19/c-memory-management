@@ -225,13 +225,22 @@ void test_smart_append(void) {
     assert(float_equal(smart_append(NULL, NULL), 1));
     char *str = "ABC";
     assert(float_equal(smart_append(NULL, str), 1));
-    TextBuffer tb = { .length = 0, .buffer = "" };
+    TextBuffer tb = {.length = 0, .buffer = ""};
     assert(float_equal(smart_append(&tb, NULL), 1));
 
-    TextBuffer tb2 = { .length = 0, .buffer = "" };
+    TextBuffer tb2 = {.length = 0, .buffer = ""};
     char *str2 = "MYSTRING";
-    smart_append(&tb2, str2);
-    assert(float_equal(tb2.length, 8));
+    assert(float_equal(smart_append(&tb2, str2), 0));
+    assert(float_equal(tb2.length, strlen(str2)));
+    assert(string_equal(tb2.buffer, str2));
+
+    char buffer_sample[64];
+    memset(buffer_sample, 'x', 60);
+    TextBuffer tb3 = {.length = 60};
+    memcpy(tb3.buffer, buffer_sample, 60);
+    char *str3 = "MYSTRING";
+    smart_append(&tb3, str3);
+    assert(float_equal(tb3.length, 64));
 }
 
 int main(void) {
