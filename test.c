@@ -264,6 +264,64 @@ void test_smart_append_when_src_cannot_fit(void) {
     assert(tb.buffer[63] == '\0');
 }
 
+void test_new_node_simple(void) {
+    snekobject_t node = new_node("root");
+    assert(string_equal(node.name, "root"));
+    assert(node.child == NULL);
+}
+
+void test_new_node_empy_name(void) {
+    snekobject_t node = new_node("");
+    assert(string_equal(node.name, ""));
+    assert(node.child == NULL);
+}
+
+void test_new_node_with_child(void) {
+    snekobject_t child = new_node("child");
+    snekobject_t parent = new_node("parent");
+    parent.child = &child;
+
+    assert(string_equal(child.name, "child"));
+    assert(child.child == NULL);
+
+    assert(string_equal(parent.name, "parent"));
+    assert(parent.child != NULL);
+
+    assert(string_equal(parent.child->name, "child"));
+    assert(parent.child->child == NULL);
+}
+
+void test_new_node_nested_children(void) {
+    snekobject_t grandchild = new_node("child");
+    snekobject_t child = new_node("child");
+    snekobject_t parent = new_node("parent");
+    child.child = &grandchild;
+    parent.child = &child;
+
+    assert(string_equal(parent.name, "parent"));
+    assert(parent.child->child != NULL);
+    assert(string_equal(parent.child->child->name, "child"));
+}
+
+void test_assign_employee(void) {
+    employee_t emp = create_employee(2, "CEO Karl");
+    department_t dept = create_department("Finance");
+    assign_employee(&emp, &dept);
+
+    assert(string_equal(emp.name, "CEO Karl"));
+    assert(string_equal(emp.department->name, "Finance"));
+}
+
+void test_assign_manager(void) {
+    employee_t manager = create_employee(3, "Influencer Prime");
+    department_t dept = create_department("Marketing");
+    assign_manager(&dept, &manager);
+
+    assert(int_equal(manager.id, 3));
+    assert(string_equal(dept.name, "Marketing"));
+    assert(string_equal(dept.manager->name, "Influencer Prime"));
+}
+
 int main(void) {
     test_print(42, 69);
     test_print_reverse(10, 5);
@@ -293,6 +351,12 @@ int main(void) {
     test_smart_append_handles_append_if_slots_permit();
     test_smart_append_exact_fit();
     test_smart_append_when_src_cannot_fit();
+    test_new_node_simple();
+    test_new_node_empy_name();
+    test_new_node_with_child();
+    test_new_node_nested_children();
+    test_assign_employee();
+    test_assign_manager();
     printf("All tests passed.\n");
     return 0;
 }

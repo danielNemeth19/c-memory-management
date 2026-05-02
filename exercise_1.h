@@ -55,4 +55,33 @@ typedef struct {
 
 int smart_append(TextBuffer *dest, const char *src);
 
+typedef struct SnekObject snekobject_t;
+
+typedef struct SnekObject {
+    char *name;
+    snekobject_t *child;
+} snekobject_t;
+
+snekobject_t new_node(char *name);
+
+typedef struct Department department_t;
+typedef struct Employee employee_t;
+
+typedef struct Employee {
+    int id;
+    char *name;
+    department_t *department;
+} employee_t;
+
+typedef struct Department {
+    char *name;
+    employee_t *manager;
+} computer_t;
+
+employee_t create_employee(int id, char *name);
+department_t create_department(char *name);
+
+void assign_employee(employee_t *emp, department_t *department);
+void assign_manager(department_t *department, employee_t *manager);
+
 #endif
