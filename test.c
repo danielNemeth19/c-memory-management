@@ -221,26 +221,47 @@ void test_concat_null_terminator_explicit(void) {
     assert(str1[4] == '\0');
 }
 
-void test_smart_append(void) {
+void test_smart_append_handles_null_inputs(void) {
     assert(float_equal(smart_append(NULL, NULL), 1));
     char *str = "ABC";
     assert(float_equal(smart_append(NULL, str), 1));
     TextBuffer tb = {.length = 0, .buffer = ""};
     assert(float_equal(smart_append(&tb, NULL), 1));
+}
 
-    TextBuffer tb2 = {.length = 0, .buffer = ""};
-    char *str2 = "MYSTRING";
-    assert(float_equal(smart_append(&tb2, str2), 0));
-    assert(float_equal(tb2.length, strlen(str2)));
-    assert(string_equal(tb2.buffer, str2));
+void test_smart_append_handles_append_if_slots_permit(void) {
+    TextBuffer tb = {.length = 0, .buffer = ""};
+    char *str = "Hello";
+    assert(float_equal(smart_append(&tb, str), 0));
+    assert(float_equal(tb.length, strlen(str)));
+    assert(string_equal(tb.buffer, str));
+}
 
+void test_smart_append_exact_fit(void) {
     char buffer_sample[64];
     memset(buffer_sample, 'x', 60);
-    TextBuffer tb3 = {.length = 60};
-    memcpy(tb3.buffer, buffer_sample, 60);
-    char *str3 = "MYSTRING";
-    smart_append(&tb3, str3);
-    assert(float_equal(tb3.length, 64));
+    TextBuffer tb = {.length = 60};
+    memcpy(tb.buffer, buffer_sample, 60);
+
+    char *str = "OKI";
+    int r = smart_append(&tb, str);
+    assert(float_equal(r, 0));
+    assert(float_equal(tb.length, 63));
+}
+
+void test_smart_append_when_src_cannot_fit(void) {
+    char buffer_sample[64];
+    memset(buffer_sample, 'x', 60);
+    TextBuffer tb = {.length = 60};
+    memcpy(tb.buffer, buffer_sample, 60);
+    char *str = "MYST";
+    int r = smart_append(&tb, str);
+    assert(float_equal(r, 1));
+    assert(float_equal(tb.length, 63));
+    assert(tb.buffer[60] == 'M');
+    assert(tb.buffer[61] == 'Y');
+    assert(tb.buffer[62] == 'S');
+    assert(tb.buffer[63] == '\0');
 }
 
 int main(void) {
@@ -268,7 +289,10 @@ int main(void) {
     test_concat_small_strings();
     test_concat_long_strings();
     test_concat_null_terminator_explicit();
-    test_smart_append();
+    test_smart_append_handles_null_inputs();
+    test_smart_append_handles_append_if_slots_permit();
+    test_smart_append_exact_fit();
+    test_smart_append_when_src_cannot_fit();
     printf("All tests passed.\n");
     return 0;
 }

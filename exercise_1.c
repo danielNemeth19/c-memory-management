@@ -106,7 +106,8 @@ void dump_graphics(graphics_t gsettings[10]) {
 };
 
 void concat_strings(char *str1, char *str2) {
-    /* let's use a while loop and pointer dereference to find the null terminator */
+    /* let's use a while loop and pointer dereference to find the null
+     * terminator */
     char terminator = '\0';
     int len_str1 = 0;
     while (*(str1 + len_str1) != terminator) {
@@ -121,23 +122,20 @@ void concat_strings(char *str1, char *str2) {
 }
 
 int smart_append(TextBuffer *dest, const char *src) {
-    if (dest == NULL | src == NULL) {
+    if (dest == NULL || src == NULL) {
         return 1;
     }
-    char terminator = '\0';
-    const int buffer_len = 64;
+    size_t buffer_len = sizeof(dest->buffer);
     size_t len_src = strlen(src);
-    size_t free_slots = buffer_len - strlen(&terminator) - dest->length;
-    if (free_slots > len_src) {
-        printf("Enough space: free (%zu) len (%zu)\n", free_slots, len_src);
+    size_t free_slots = buffer_len - dest->length - 1;
+    printf("free (%zu) - len of src (%zu) - %s\n", free_slots, len_src, src);
+    if (free_slots >= len_src) {
         strcat(dest->buffer, src);
         dest->length += len_src;
         return 0;
     } else {
-        printf("Not enough space in the buffer: free (%zu) len (%zu)\n", free_slots, len_src);
         strncat(dest->buffer, src, free_slots);
-        dest->buffer[buffer_len - 1] = terminator;
-        dest->length = buffer_len;
+        dest->length = buffer_len - 1;
         return 1;
     }
 }
