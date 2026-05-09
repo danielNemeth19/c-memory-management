@@ -47,6 +47,10 @@ void test_http_switch_statement(void) {
                         "Unknown HTTP status code"));
 }
 
+void test_packet_header_size(void) {
+    assert(float_equal(sizeof(packet_header_t), 8));
+}
+
 int main(void) {
     test_color_enum1();
     test_color_enum2();
