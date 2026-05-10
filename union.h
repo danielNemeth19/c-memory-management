@@ -27,5 +27,5 @@ typedef union PackerHeader {
         uint16_t dest_port;
         uint32_t seq_num;
     } tcp_header;
-    char raw[8];
+    unsigned char raw[8];
 } packet_header_t;
