@@ -3,6 +3,8 @@
 
 int main() {
     printMessageOne();
+    printMessageTwo();
+    printMessageThree();
     return 0;
 }
 
@@ -13,14 +15,12 @@ __attribute__((noinline)) void printMessageOne(void) {
     const char *message = "Dark mode?\n";
     printStackPointerDiff();
     printf("%s\n", message);
-    printMessageTwo();
 }
 
 __attribute__((noinline)) void printMessageTwo(void) {
     const char *message = "More like...\n";
     printStackPointerDiff();
     printf("%s\n", message);
-    printMessageThree();
 }
 
 __attribute__((noinline)) void printMessageThree(void) {
