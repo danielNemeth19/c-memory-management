@@ -11,6 +11,22 @@ Unlike structs, which allocate memory for each field,
 - the C compiler uses the list of possible types in a union to determine the maximum memory required
 - this makes unions memory-efficient data storage when we know that only one field will be used at any time
 
+## Examples
+
+```c
+typedef union {
+    int age;
+    char *name;
+} AgeOrName;
+
+AgeOrName person;
+person.age = 30;
+printf("Age: %d\n", person.age); // Age: 30
+
+// Accessing a non-set field results in undefined behavior
+printf("Name: %s\n", person.name); // Undefined behavior
+```
+
 # Stack and Heap
 
 ## Summary
