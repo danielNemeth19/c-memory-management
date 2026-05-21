@@ -1,4 +1,4 @@
-#include "exercise_1.h"
+#include "basics.h"
 #include <stddef.h>
 #include <stdio.h>
 
@@ -78,4 +78,9 @@ void update_file(int filedata[200], int new_filetype, int new_num_lines) {
             filedata[i] = 0;
         }
     }
+}
+
+unsigned long size_of_addr(long long i){
+    unsigned long sizeof_snek_version = sizeof(&i);
+    return sizeof_snek_version;
 }

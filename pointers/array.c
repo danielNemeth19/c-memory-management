@@ -1,5 +1,3 @@
-#include "coord.h"
-#include <signal.h>
 #include <stdio.h>
 
 /* Example memory layout */
@@ -13,6 +11,12 @@
 /* 0x2018 	points[2].x 	7 	    24 */
 /* 0x201C 	points[2].y 	8 	    28 */
 /* 0x2020 	points[2].z 	9 	    32 */
+
+typedef struct Coordinate {
+    int x;
+    int y;
+    int z;
+} coordinate_t;
 
 int multibyte_arrays(void) {
     coordinate_t points[3] = {

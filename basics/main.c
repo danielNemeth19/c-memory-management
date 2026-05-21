@@ -1,5 +1,5 @@
-#include "coord.h"
-#include "exercise_1.h"
+#include "../structs/coord.h"
+#include "../pointers/pointers.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -64,5 +64,4 @@ int main() {
     printf("Size of int array: %zu bytes\n", sizeof(intArray));
     printf("Size of char array: %zu bytes\n", sizeof(charArray));
     printf("Size of double array: %zu bytes\n", sizeof(doubleArray));
-
 }

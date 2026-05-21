@@ -1,5 +1,4 @@
 #include "enums.h"
-#include <stdio.h>
 
 char *http_to_str(http_error_code_t code) {
     switch (code) {
