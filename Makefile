@@ -1,4 +1,4 @@
-.PHONY: build-basics test-basics test-structs test-pointers test-enums test-unions
+.PHONY: build-basics test-basics test-structs test-pointers test-enums test-unions test-adv-pointers
 
 build-basics:
 	gcc basics/main.c -o main.o
@@ -17,6 +17,10 @@ test-enums:
 
 test-unions:
 	gcc unions/union.c unions/union_test.c -o test_suite.o && ./test_suite.o
+
+test-adv-pointers:
+	gcc 07_advanced_pointers/advanced_pointers.c 07_advanced_pointers/advanced_pointers_test.c -o test_suite.o && ./test_suite.o
+
 clean:
 	rm -rf *.o *.out
 
