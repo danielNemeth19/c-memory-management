@@ -1,8 +1,215 @@
 # Learning memory management in C
 
-# Unions
+## Pointers
+### Memory and Variable Addresses in C
+In computing, an address refers to a specific location in memory, which can be thought of as an array of bytes.
+Each byte in memory has a unique address represented as a number. These addresses are frequently displayed in a Hexadecimal format
+(base 16) rather than decimal (base 10) because it is more compact and easier to work with in the context of memory management.
+For example 0xfff8 in Hexadecimal corresponds to `65,528` in decimal.
 
-## Summary
+In C, variables are human-readable names that reference data stored in memory.
+Memory can be visualized as a large array of bytesm where each piece of data is stored at a specific index or address.
+The address-of-operator (`&`) is used to retrieve the memory address of a variable. Memory addresses are crucial for understanding pointers and memory management.
+
+Understanding memory addresses is crucial for working with pointers and managing memory in laguanges like C.
+
+
+### Virtual Memory
+Virtual memory is an abstraction layer providede by the operating systems that makes it appear as though a program has direct access
+to the entire memory space of a machine. In reality, the operating system manages this access, enabling several advantages.
+
+Key Concepts
+- **Physical Memory**: The actual RAM hardware in a computer
+- **Operating System**: Manages access to physical memory and provides virtual memory to processess
+- **Process**: A running instance of a program that is given access to a segment of virtual memory
+- **Virtual Memory**: An abstraction that enables processess to operate as if they have continuous access to a large block of memory
+
+Benefits
+1. **Isolation**: Processess are isolated from each other, preventing unauthorized memory access
+2. **Security**: Systems can restrict access to certain memory areas, enhancing security
+3. **Simplicity**: Developers don't need to manage physical memory directly
+4. **Performance**: Memory access is optimized, with data being efficiently moved between RAM and storage as needed.
+
+Overall, virtual memory simplifies programming and enhances system stability and performance by managing how processes interact with memory
+
+### Understanding pointers in C
+Pointers in C are variables that store memory addresses, effectively "pointing" to the location of another variable's data.
+They are declared with an asterix (`*`) after the type, indicating the variable is a pointer of that type. The address-of-operator (`&`)
+is used to obtain the memory address of a variable, which can be then stored in a pointer.
+
+#### Examples
+```c
+int age = 37;
+int *ptr_to_age = &age;
+int value_at_prt = *ptr_to_age;
+```
+Printing the address of a variable:
+```c
+#include <stdio.h>
+
+int main() {
+    int wizardLevel = 5;
+    printf("Address of wizardLevel is: %p\n", &wizardLevel);
+    // Possible output: Address of wizardLevel is: 0xfff8
+    return 0;
+}
+```
+
+### Pointer dereferencing
+Dereferencing a pointer accesses the value stored at the memory address it points to, using the `*` operator. This operator is used
+both to declare pointer types and to access the data being pointed to, which can cause confusion.
+
+#### Examples
+Declaring and using pointers:
+```c
+int meaining_of_life = 42;
+int *ptr_to_mol = &meaining_of_life;
+int value_at_pointer = *ptr_to_mol; // Dereference to get value at the pointer
+printf("value_at_pointer: %d\n", value_at_pointer);  // 42
+```
+
+Changing a value with pointers:
+```c
+int speed = 60;
+int *pointer_to_speed = &speed;  
+*pointer_to_speed = 100;  // Dereferencing to update value stored in speed
+```
+
+### Why pointers in C?
+Pointers in C are crucial for manipulating data structures like structs. When structs are passed to functions, they are passed by value,
+meaming a copy is created, and modifications do not affect the original data unless the struct is returned or pointers are used.
+Using pointers allows you to modifiy the original data without creating a copy, makeing functions more efficient by directly manipulating the memory address of the data.
+
+#### Examples
+In Python, objects like class instances are inherently passed by reference, allowing modifications within functions to affect the original object:
+```python
+class Coordinate:
+    def __init__(self, x, y, z):
+        self.x = x
+        self.y = y
+        self.z = z
+
+
+def update_coordinate(coord, new_x):
+    coord.x = new_x
+
+
+c = Coordinate(1, 2, 3)
+update_coordinate(c, 4)
+print(c.x)  # 4
+```
+C Example: Passing by value
+In C, structs are passed by value, requiring the struct to be returned *or* pointers to be used for modifications to persist:
+```c
+struct Coordinate {
+    int x, y, z;
+};
+
+struct Coordinate coordinate_update_and_return(struct Coordinate coord, int new_x) {
+    coord.x = new_x;
+    return coord;
+}
+
+struct Coordinate c = {1, 2, 3};
+c = coordinate_update_and_return(c, 4);
+printf("%d\n", c.x);  // 4
+```
+
+### Arrow Operator
+In C, when you have a struct, fields are accessed using the dot (`.`). However, if you have a pointer to a struct, the arrow (`->`)
+operator is used to access the fields. This operator combines dereferencing the pointer and accessing the field in one step, leading to
+more concise and readable code compared to using the dereference (`*`) and dot (`.`) operators separately.
+
+The precedence of the `.` operator is higher than the `*` operator, so parentheses are necessary when using `*` to dereference before accessing a member with `.`.
+
+Which explains why the arrow operator is so much more common.
+
+#### Examples
+Accessing struct members with a pointer using the arrow operator:
+```c
+typedef struct {
+    int x;
+    int y;
+    int z;
+} coordinate_t,
+
+coordinate_t point = {10, 20, 30};
+coordinate_t *ptrToPoint = &point;
+printf("X: %d\n", ptrToPoint->x);  // Outputs: X: 10
+```
+
+Accessing struct member with a pointer using dereference and dot operators:
+```c
+printf("X: %d\n", (*ptrToPoint).x);  // Outputs: X: 10
+```
+
+### C Arrays
+In C, arrays are a fixed-size, ordered collection of elements of the same type, stored in contiguous memory. Arrays are indexed starting from zero,
+similar to python lists, but cannot be resized dynamically. Due to their fixed size, they can be more memory efficient and faster for accessing elements
+compared to dynamic data structures.
+
+Iterating over arrays in C requires using a loop with an index variable since there's no built-in syntax for iterating directly
+over the array elements. You can update array values using the index and assignment syntax `arr[index] = value`.
+
+#### Examples
+Declaring and initializing an integer array:
+```c
+int number[3] = {10, 20, 30};
+```
+Iterating
+```c
+#include <stdio.h>
+
+int main() {
+    int numbers[3] = {10, 20, 30};
+
+    for (int i=0; i < 3; i++) {
+        printf("%d ", numbers[i]);
+    }
+    printf("\n");
+    return 0;
+}
+```
+
+NOTE: C does **not** provide a built-in `length` attibute for arrays. Size needs to be tracked separately.
+
+### Pointer Arithmetic
+In C, the name of an array **acts as a pointer to its first element**, making arrays and pointers closely related. This allows array indexing
+and pointer arithmetic to be used interchangeably to access elements. When you add an integer to a pointer, it calculates the offset
+based on the size of the data type, allowing direct access to specific array elements.
+
+### Examples
+Declare an array and access elements using indexing and pointers:
+```c
+int numbers[5] = {1, 2, 3, 4, 5};
+
+// Access using index arraying
+int valueWithIndex = numbers[2];
+
+// Access using pointer arithmetic
+int valueWithPointer = *(numbers + 2);
+
+// Both valueWithIndex and valueWithPointer will be 3
+```
+Pointer arithmetic
+```c
+int numbers[5] = {1, 2, 3, 4, 5};
+int *ptr = numbers;
+
+// Pointer initially points to the first element
+printf("%d\n", *ptr);  // Output: 1
+
+// Move pointer two positions forward
+ptr += 2;
+printf("%d\n", *ptr);  // Output: 3
+```
+
+In these examples, the pointer manipulation demonstatrates how you can traverse an array using pointer arithmetic, achieving the same results
+as with traditional array indexing.
+
+## Unions
+
+### Summary
 
 Unions in C allow a single variable to store one of several types, but only one type at a time.
 
@@ -29,25 +236,25 @@ printf("Age: %d\n", person.age); // Age: 30
 printf("Name: %s\n", person.name); // Undefined behavior
 ```
 
-# Stack and Heap
+## Stack and Heap
 
-## Summary
+### Summary
 In C programming, memory is divided into the **stack** and the **heap**.
 
 - The **stack** is where local variables are stored.
-    - Each time a function is called, a new stack frame is created to hold the function's local variables and parameters.
-    - When the function completes, its stack frame is removed ("popped") from the stack.
-    - A stack frame consists of:
-        - Return address (where to continue execution after the function call)
-        - Function arguments
-        - Local variables
+- Each time a function is called, a new stack frame is created to hold the function's local variables and parameters.
+- When the function completes, its stack frame is removed ("popped") from the stack.
+- A stack frame consists of:
+- Return address (where to continue execution after the function call)
+    - Function arguments
+    - Local variables
     - The stack operates as a **Last In, First Out (LIFO)** structure: the most recently added stack frame is the first to be removed.
 
-## Why use the stack?
+### Why use the stack?
 
-Allocating memory on the stack is preferred when possible because the stack is faster and simpler than the heap.
+    Allocating memory on the stack is preferred when possible because the stack is faster and simpler than the heap.
 
-- **Efficient Pointer Management**
+    - **Efficient Pointer Management**
     - Stack allocation is just a quick increment or decrement of the stack pointer (extremely fast).
     - Heap allocations require more complex bookkeeping.
 - **Cache-Friendly Memory Access**
