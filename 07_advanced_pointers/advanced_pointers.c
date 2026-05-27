@@ -32,3 +32,32 @@ void snek_zero_out(void *ptr, snek_object_kind_t kind) {
         ((snek_bool_t *)ptr)->value = 0;
     }
 }
+
+void swap_ints(int *a, int *b) {
+    /* printf("inside ptr1 before %d\n", *a); */
+    /* printf("inside ptr2 before %d\n", *b); */
+    int _t = *a;
+    *a = *b;
+    *b = _t;
+    /* printf("inside ptr1 after %d\n", *a); */
+    /* printf("inside ptr2 after %d\n", *b); */
+}
+
+void swap_ints_old(int *a, int *b) {
+    // this function only swaps the values locally
+    // i.e. in the function's stack frame
+    // caller will see the same values
+    int *_t = a;
+    a = b;
+    b = _t;
+}
+
+void swap_chars(char **a, char **b) {
+    /* printf("inside ptr1 before %s\n", *a); */
+    /* printf("inside ptr2 before %s\n", *b); */
+    char *_t = *a;
+    *a = *b;
+    *b = _t;
+    /* printf("inside ptr1 after %s\n", *a); */
+    /* printf("inside ptr2 after %s\n", *b); */
+}

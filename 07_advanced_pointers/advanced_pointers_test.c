@@ -138,6 +138,43 @@ void test_snek_zero_out_nonzero_values(void) {
     assert(int_equal(snek_bl.value, 0));
 }
 
+void test_swap_ints(void) {
+    int num_1 = 2;
+    int num_2 = 4;
+    int *ptr1 = &num_1;
+    int *ptr2 = &num_2;
+
+    swap_ints(ptr1, ptr2);
+    assert(int_equal(num_1, 4));
+    assert(int_equal(num_2, 2));
+}
+
+void test_swap_ints_same(void) {
+    int num_1 = 10;
+    swap_ints(&num_1, &num_1);
+    assert(int_equal(num_1, 10));
+}
+
+void test_swap_chars(void) {
+    char *text1 = "first";
+    char *text2 = "second";
+    char **ptr1 = &text1;
+    char **ptr2 = &text2;
+
+    swap_chars(ptr1, ptr2);
+    assert(string_equal(text1, "second"));
+    assert(string_equal(text2, "first"));
+}
+
+void test_swap_chars_longer(void) {
+    char *text1 = "terminal.shop";
+    char *text2 = "ssh";
+
+    swap_chars(&text1, &text2);
+    assert(string_equal(text1, "ssh"));
+    assert(string_equal(text2, "terminal.shop"));
+}
+
 int main(void) {
     test_allocate();
     test_does_not_overwrite();
@@ -147,6 +184,10 @@ int main(void) {
     test_snek_zero_out_float();
     test_snek_zero_out_bool();
     test_snek_zero_out_nonzero_values();
+    test_swap_ints();
+    test_swap_ints_same();
+    test_swap_chars();
+    test_swap_chars_longer();
     printf("All tests passed.\n");
     return 0;
 }

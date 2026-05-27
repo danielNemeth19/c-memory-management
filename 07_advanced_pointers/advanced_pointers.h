@@ -40,3 +40,6 @@ typedef struct SneakBool {
 
 
 void snek_zero_out(void *ptr, snek_object_kind_t kind);
+
+void swap_ints(int* a, int* b);
+void swap_chars(char **a, char **b);
