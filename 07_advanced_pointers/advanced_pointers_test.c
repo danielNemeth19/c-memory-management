@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
+#include <sys/types.h>
 
 static int ptr_not_null(void *ptr, char *message) {
     bool verdict = ptr != NULL;
@@ -175,6 +176,44 @@ void test_swap_chars_longer(void) {
     assert(string_equal(text2, "terminal.shop"));
 }
 
+void test_generic_ints(void) {
+    int i1 = 1234;
+    int i2 = 5678;
+
+    swap(&i1, &i2, sizeof(int));
+    assert(int_equal(i1, 5678));
+    assert(int_equal(i2, 1234));
+}
+
+void test_generic_string(void) {
+    char *s1 = "first";
+    char *s2 = "second";
+
+    swap(&s1, &s2, sizeof(char *));
+    assert(string_equal(s1, "second"));
+    assert(string_equal(s2, "first"));
+}
+
+typedef struct CoffeShop {
+    u_int16_t quality;
+    u_int16_t taste;
+    u_int16_t branding;
+} coffe_shop_t;
+
+void test_generic_structs(void) {
+    coffe_shop_t sbucks = {2, 3, 4};
+    coffe_shop_t terminalshop = {10, 10, 10};
+
+    swap(&sbucks, &terminalshop, sizeof(coffe_shop_t));
+    assert(int_equal(sbucks.quality, 10));
+    assert(int_equal(sbucks.taste, 10));
+    assert(int_equal(sbucks.branding, 10));
+
+    assert(int_equal(terminalshop.quality, 2));
+    assert(int_equal(terminalshop.taste, 3));
+    assert(int_equal(terminalshop.branding, 4));
+}
+
 int main(void) {
     test_allocate();
     test_does_not_overwrite();
@@ -188,6 +227,8 @@ int main(void) {
     test_swap_ints_same();
     test_swap_chars();
     test_swap_chars_longer();
+    test_generic_ints();
+    test_generic_structs();
     printf("All tests passed.\n");
     return 0;
 }

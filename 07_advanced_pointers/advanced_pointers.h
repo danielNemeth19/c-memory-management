@@ -43,3 +43,5 @@ void snek_zero_out(void *ptr, snek_object_kind_t kind);
 
 void swap_ints(int* a, int* b);
 void swap_chars(char **a, char **b);
+
+void swap(void *vp1, void *vp2, size_t size);

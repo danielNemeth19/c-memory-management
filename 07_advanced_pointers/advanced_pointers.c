@@ -1,6 +1,7 @@
 #include "advanced_pointers.h"
 #include <stddef.h>
 #include <stdlib.h>
+#include <string.h>
 
 void allocate_int(int **pointer_pointer, int value) {
     int *ptr = malloc(sizeof(int));
@@ -60,4 +61,15 @@ void swap_chars(char **a, char **b) {
     *b = _t;
     /* printf("inside ptr1 after %s\n", *a); */
     /* printf("inside ptr2 after %s\n", *b); */
+}
+
+void swap(void *vp1, void *vp2, size_t size) {
+    void *_t = malloc(size);
+    if (_t == NULL) {
+        exit(1);
+    }
+    memcpy(_t, vp1, size);
+    memcpy(vp1, vp2, size);
+    memcpy(vp2, _t, size);
+    free(_t);
 }
