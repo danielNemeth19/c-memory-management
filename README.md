@@ -315,3 +315,34 @@ This is the format used by most modern computers.
     - For `0xAB`, decimal value = (A × 16) + (B × 1)
 
 
+## Advanced Pointers
+### Pointer-to-Pointer in C
+In C, a pointer-to-pointer is a variable that stores the address of another pointer. This allows for the creation of complex data
+structures and enables indirect modifications of pointers. The syntax for declaring a pointer-to-pointer involves using double asterisks (**).
+
+Pointer-to-pointer variables are useful for working with mult-level data structures, such as arrays of pointers or when dynamically
+allocating memory for complex objects. They enable a chain of dereferences to reach the final value, similar to following a series of linked addresses.
+
+#### Examples
+Declare a pointer-to-pointer:
+```c
+int value = 42;
+int  *single_pointer = &value;
+int **double_pointer = &single_pointer;
+
+// Dereferencing to access `value`
+printf("%d\n", **double_pointer); // 42
+
+```
+
+Modify value using a pointer-to-pointer:
+```c
+int number = 10;
+int  *ptr = &number;
+int **ptr_ptr = &ptr;
+
+**ptr_ptr = 20;
+
+printf("%d\n", **ptr_ptr); // 20 
+
+```
