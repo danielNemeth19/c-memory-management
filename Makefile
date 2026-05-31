@@ -21,6 +21,9 @@ test-unions:
 test-adv-pointers:
 	gcc 07_advanced_pointers/advanced_pointers.c 07_advanced_pointers/advanced_pointers_test.c -o test_suite.o && ./test_suite.o
 
+test-stack:
+	gcc 08_stack_data_structures/sneakstack.c 08_stack_data_structures/sneakstack_test.c -o test_suite.o && ./test_suite.o
+
 clean:
 	rm -rf *.o *.out
 

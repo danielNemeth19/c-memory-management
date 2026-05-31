@@ -346,3 +346,21 @@ int **ptr_ptr = &ptr;
 printf("%d\n", **ptr_ptr); // 20 
 
 ```
+After above change, consider below diagramm:
+```
+Assume:
+number  at address 0x100
+ptr     at address 0x200
+ptr_ptr at address 0x300
+
+Variable   | Address  | Value
+-----------|----------|-----------------
+number     | 0x100    | 20
+ptr        | 0x200    | 0x100 (address of number)
+ptr_ptr    | 0x300    | 0x200 (address of ptr)
+
+So:
+*ptr      == 20
+*ptr_ptr  == 0x100 (address of number)
+**ptr_ptr == 20
+```

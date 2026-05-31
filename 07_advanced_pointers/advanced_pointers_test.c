@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
+#include <stdio.h>
 #include <sys/types.h>
 
 static int ptr_not_null(void *ptr, char *message) {
