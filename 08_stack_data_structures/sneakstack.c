@@ -1,19 +1,25 @@
 #include "sneakstack.h"
 #include <stdlib.h>
 
+void *stack_pop(stack_t *stack){
+    if (stack->count == 0) {
+        return NULL;
+    }
+    stack->count -= 1 ;
+    return stack->data[stack->count];
+}
+
 void stack_push(stack_t *stack, void *obj) {
     if (stack->count == stack->capacity) {
-        void *new_data = realloc(stack->data, 2 * stack->capacity * sizeof(void *));
-        if (new_data == NULL) {
-            free(new_data);
+        stack->capacity *= 2;
+        void *temp = realloc(stack->data, stack->capacity * sizeof(void *));
+        if (temp == NULL) {
+            stack->capacity /= 2;
             return;
         };
-        stack->data = new_data;
-        stack->capacity = 2 * stack->capacity;
+        stack->data = temp;
     };
-    if (stack->count < stack->capacity) {
-        stack->data[stack->count] = obj;
-    }
+    stack->data[stack->count] = obj;
     stack->count++;
 }
 

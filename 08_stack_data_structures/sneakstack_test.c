@@ -28,7 +28,7 @@ void test_create_stack_small(void) {
     stack_t *s = stack_new(3);
     assert(int_equal(s->capacity, 3));
     assert(int_equal(s->count, 0));
-    assert(ptr_not_null(s, "Allocates the stack data"));
+    assert(ptr_not_null(s, "Must allocate a new stack"));
 
     free(s->data);
     free(s);
@@ -38,7 +38,7 @@ void test_create_stack_large(void) {
     stack_t *s = stack_new(100);
     assert(int_equal(s->capacity, 100));
     assert(int_equal(s->count, 0));
-    assert(ptr_not_null(s, "Allocates the stack data"));
+    assert(ptr_not_null(s, "Must allocate a new stack"));
 
     free(s->data);
     free(s);
@@ -46,7 +46,7 @@ void test_create_stack_large(void) {
 
 void test_push_stack(void) {
     stack_t *s = stack_new(2);
-    assert(ptr_not_null(s, "Allocates stack data"));
+    assert(ptr_not_null(s, "Must allocate a new stack"));
     assert(int_equal(s->capacity, 2));
     assert(int_equal(s->count, 0));
 
@@ -62,7 +62,7 @@ void test_push_stack(void) {
 
 void test_push_double_capacity(void) {
     stack_t *s = stack_new(2);
-    assert(ptr_not_null(s, "Allocates stack data"));
+    assert(ptr_not_null(s, "Must allocate a new stack"));
     assert(int_equal(s->capacity, 2));
     assert(int_equal(s->count, 0));
     assert(ptr_not_null(s->data, "Allocates stack data"));
@@ -104,12 +104,69 @@ void test_push_multiple_values(void) {
     free(s);
 }
 
+void test_pop_stack(void) {
+    stack_t *s = stack_new(2);
+    assert(ptr_not_null(s, "Must allocate a new stack"));
+
+    assert(int_equal(s->capacity, 2));
+    assert(int_equal(s->count, 0));
+    assert(ptr_not_null(s->data, "Allocates stack data"));
+
+    int one = 1;
+    int two = 2;
+    int three = 3;
+
+    stack_push(s, &one);
+    stack_push(s, &two);
+
+    assert(int_equal(s->capacity, 2));
+    assert(int_equal(s->count, 2));
+    
+    stack_push(s, &three);
+    assert(int_equal(s->capacity, 4));
+    assert(int_equal(s->count, 3));
+
+    int *popped = stack_pop(s);
+    assert(int_equal(*popped, 3));
+    assert(int_equal(s->count, 2));
+
+    popped = stack_pop(s);
+    assert(int_equal(*popped, 2));
+    assert(int_equal(s->count, 1));
+     
+    popped = stack_pop(s);
+    assert(int_equal(*popped, 1));
+    assert(int_equal(s->count, 0));
+
+    popped = stack_pop(s);
+    assert(popped == NULL);
+
+    free(s->data);
+    free(s); 
+}
+
+void test_pop_stack_empty(void) {
+    stack_t *s = stack_new(2);
+    assert(ptr_not_null(s, "Must allocate a new stack"));
+
+    assert(int_equal(s->capacity, 2));
+    assert(int_equal(s->count, 0));
+    assert(ptr_not_null(s->data, "Allocates stack data"));
+
+    int *popped = stack_pop(s);
+    assert(popped == NULL);
+    free(s->data);
+    free(s); 
+}
+
 int main(void) {
     test_create_stack_small();
     test_create_stack_large();
     test_push_stack();
     test_push_double_capacity();
     test_push_multiple_values();
+    test_pop_stack();
+    test_pop_stack_empty();
     printf("All tests passed.\n");
     return 0;
 }
