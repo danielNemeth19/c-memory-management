@@ -1,11 +1,23 @@
 #include "sneakstack.h"
 #include <stdlib.h>
+#include <stdio.h>
+
+void stack_free(stack_t *stack) {
+    if (stack==NULL) {
+        return;
+    }
+    if (stack->data != NULL) {
+        free(stack->data);
+    }
+    free(stack);
+}
 
 void *stack_pop(stack_t *stack){
     if (stack->count == 0) {
         return NULL;
     }
-    stack->count -= 1 ;
+    /* stack->count -= 1 ; */
+    stack->count-- ;
     return stack->data[stack->count];
 }
 
