@@ -220,7 +220,7 @@ Unlike structs, which allocate memory for each field,
 - the C compiler uses the list of possible types in a union to determine the maximum memory required
 - this makes unions memory-efficient data storage when we know that only one field will be used at any time
 
-## Examples
+### Examples
 
 ```c
 typedef union {
@@ -363,4 +363,28 @@ So:
 *ptr      == 20
 *ptr_ptr  == 0x100 (address of number)
 **ptr_ptr == 20
+```
+
+### Array of Pointers in C
+In C, array of pointers can be created, which are especially useful for handling strings. An array of pointers can be dynamically allocated
+on the heap using the `malloc` function. This allows storing addresses of dynamically allocated memory, faciliating complex data structures
+like arrays of strings or arrays of structs.
+
+#### Examples
+Creating an array of integer pointers:
+```c
+int **int_pointer_array = malloc(sizeof(int *) * 3);
+int_pointer_array[0] = malloc(sizeof(int));
+*int_pointer_array[0] = 10;
+int_pointer_array[1] = malloc(sizeof(int));
+*int_pointer_array[1] = 20;
+int_pointer_array[2] = malloc(sizeof(int));
+*int_pointer_array[2] = 30;
+```
+Creating an array of string pointers:
+```c
+char **string_array = malloc(sizeof(char *) * 3);
+string_array[0] = strdup("apple");
+string_array[1] = strdup("banana");
+string_array[2] = strdup("cherry");
 ```
