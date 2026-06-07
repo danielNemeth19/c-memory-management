@@ -388,3 +388,66 @@ string_array[0] = strdup("apple");
 string_array[1] = strdup("banana");
 string_array[2] = strdup("cherry");
 ```
+
+### Void Pointers in C
+In C, a `void *` or "void pointer" is a pointer that can hold the address of any data type. This makes void pointers versatile for generic
+programming, but they cannot be dereferenced without explicitly casting them to another pointer type. A void pointer must be cast back to its
+original type before performing operations like dereferencing.
+
+Casting to void pointers is unique - no type information is preserved when casting a specific type to a void pointer. To utilize the data,
+you must cast the void pointer back to the appropriate type.
+
+#### Examples
+Basic example showing casting and dereferencing:
+```c
+int number = 42;
+void *generic_ptr = &number;
+
+// Cast to appropriate type before dereferencing
+printf("Value of number: %d\n", *(int *)generic_ptr);
+```
+Example of using void pointers with type information:
+```c
+typedef enum DATA_TYPE {
+    INT,
+    FLOAT
+} data_type_t;
+
+void printValue(void *ptr, data_type_t type) {
+    if (type == INT) {
+        printf("Value: %d\n", *(int*)ptr);
+    } else if (type == FLOAT) {
+        printf("Value: %d\n", *(float*)ptr);
+    }
+}
+
+int number = 42;
+printValue(&number, INT);
+
+float decimal = 3.14;
+printValue(&decimal, FLOAT);
+```
+
+### Swapping Integers Using pointers in C
+In C, swapping two integers using pointers involves accessing the memory loactions directly through their pointers.
+The technique requires a temporary variable to store the value of one integer temporarily while the values are swapped.
+By manipulating pointers, you can efficiently swap the values stored at two distinct memory addresses without returning them from a function.
+
+#### Examples
+Swapping two integers with pointers:
+```c
+void swap_ints(int *a, int *b) {
+    int temp = *a; // Store the value pointed to by `a`
+    *a = *b;  // Assign the value pointed to by `b` to the location pointed to by `a`
+    *b = temp; // Assign the stored value to the location pointed to by `b`
+}
+
+// Usage
+int main() {
+    int number1 = 10;
+    int number2 = 20;
+    swap_ints(number1, number2);
+    // number1 is now  20
+    // number2 is now 10
+}
+```
