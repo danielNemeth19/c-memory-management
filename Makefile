@@ -1,4 +1,4 @@
-.PHONY: build-basics test-basics test-structs test-pointers test-enums test-unions test-adv-pointers
+.PHONY: build-basics test-basics test-structs test-pointers test-enums test-unions test-adv-pointers test-stack test-objects
 
 build-basics:
 	gcc basics/main.c -o main.o
@@ -23,6 +23,9 @@ test-adv-pointers:
 
 test-stack:
 	gcc 08_stack_data_structures/sneakstack.c 08_stack_data_structures/sneakstack_test.c -o test_suite.o && ./test_suite.o
+
+test-objects:
+	gcc 09_objects/snekobject_test.c -o test_suite.o && ./test_suite.o
 
 clean:
 	rm -rf *.o *.out
