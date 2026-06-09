@@ -22,10 +22,10 @@ test-adv-pointers:
 	gcc 07_advanced_pointers/advanced_pointers.c 07_advanced_pointers/advanced_pointers_test.c -o test_suite.o && ./test_suite.o
 
 test-stack:
-	gcc 08_stack_data_structures/sneakstack.c 08_stack_data_structures/sneakstack_test.c -o test_suite.o && ./test_suite.o
+	gcc 08_stack_data_structures/snekstack.c 08_stack_data_structures/snekstack_test.c -o test_suite.o && ./test_suite.o
 
 test-objects:
-	gcc 09_objects/snekobject_test.c -o test_suite.o && ./test_suite.o
+	gcc 09_objects/snekobject.c 09_objects/snekobject_test.c -o test_suite.o && ./test_suite.o
 
 clean:
 	rm -rf *.o *.out

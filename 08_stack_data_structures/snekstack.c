@@ -1,4 +1,4 @@
-#include "sneakstack.h"
+#include "snekstack.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
