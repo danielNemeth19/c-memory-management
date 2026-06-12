@@ -1,8 +1,29 @@
 #include "snekobject.h"
 #include <assert.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 static int int_equal(int a, int b) { return (a - b) == 0; };
+
+static int float_equal(float a, float b) {
+    const float epsilon = 1e-6f;
+    return (a - b < epsilon) && (b - a < epsilon);
+}
+static int ptr_not_null(void *ptr, char *message) {
+    bool verdict = ptr != NULL;
+    if (!verdict) {
+        printf("Failure: %s\n", message);
+    }
+    return verdict;
+}
+
+static int ptr_not_equal(void *ptr1, void *ptr2, char *message) {
+    bool verdict = ptr1 != ptr2;
+    if (!verdict) {
+        printf("Failure: %s\n", message);
+    }
+    return verdict;
+}
 
 void test_integer_constant(void) { assert(int_equal(INTEGER, 0)); }
 
@@ -17,36 +38,73 @@ void test_integer_obj(void) {
     free(obj);
 }
 
-void test_stack_integer_positive(void) {
-    snek_object_t *t = new_stack_integer(10);
-    
+void test_snek_integer_positive(void) {
+    snek_object_t *t = new_snek_integer(10);
+
     assert(int_equal(t->data.v_int, 10));
     assert(int_equal(t->kind, INTEGER));
     free(t);
 }
 
-void test_stack_integer_zero(void) {
-    snek_object_t *t = new_stack_integer(0);
-    
+void test_snek_integer_zero(void) {
+    snek_object_t *t = new_snek_integer(0);
+
     assert(int_equal(t->data.v_int, 0));
     assert(int_equal(t->kind, INTEGER));
     free(t);
 }
 
-void test_stack_integer_negative(void) {
-    snek_object_t *t = new_stack_integer(-10);
-    
+void test_snek_integer_negative(void) {
+    snek_object_t *t = new_snek_integer(-10);
+
     assert(int_equal(t->data.v_int, -10));
     assert(int_equal(t->kind, INTEGER));
     free(t);
 }
 
+void test_snek_float_positive(void) {
+    snek_object_t *t = new_snek_float(8.23);
+
+    assert(float_equal(t->data.v_float, 8.23));
+    assert(float_equal(t->kind, FLOAT));
+    free(t);
+}
+
+void test_snek_float_zero(void) {
+    snek_object_t *t = new_snek_float(0.0);
+
+    assert(float_equal(t->data.v_float, 0.0));
+    assert(float_equal(t->kind, FLOAT));
+    free(t);
+}
+
+void test_snek_float_negative(void) {
+    snek_object_t *t = new_snek_float(-10.13);
+
+    assert(float_equal(t->data.v_float, -10.13));
+    assert(int_equal(t->kind, FLOAT));
+    free(t);
+}
+
+void test_snek_string_copied(void) {
+    char *input = "Hello World!";
+    snek_object_t *obj = new_snek_string(input);
+
+    assert(int_equal(obj->kind, STRING));
+    assert(ptr_not_equal(input, obj->data.v_string, "Pointers should be different"));
+    assert(input == obj->data.v_string);
+}
+
 int main(void) {
     test_integer_constant();
     test_integer_obj();
-    test_stack_integer_positive();
-    test_stack_integer_zero();
-    test_stack_integer_negative();
+    test_snek_integer_positive();
+    test_snek_integer_zero();
+    test_snek_integer_negative();
+    test_snek_float_positive();
+    test_snek_float_zero();
+    test_snek_float_negative();
+    test_snek_string_copied();
     printf("All tests passed.\n");
     return 0;
 }
