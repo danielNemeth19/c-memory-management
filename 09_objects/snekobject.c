@@ -2,8 +2,27 @@
 #include <stdlib.h>
 #include <string.h>
 
-snek_object_t *new_snek_vector3(snek_object_t *x, snek_object_t *y, snek_object_t *z) {
-    if ((x == NULL ) || (y == NULL) || (z == NULL)) {
+snek_object_t *new_snek_array(size_t size) {
+    snek_object_t *s_obj = malloc(sizeof(snek_object_t));
+    if (s_obj == NULL) {
+        return NULL;
+    }
+    snek_object_t **arrays = calloc(size, sizeof(snek_object_t *));
+    if (arrays == NULL) {
+        free(s_obj);
+        return NULL;
+    }
+    s_obj->kind = ARRAY;
+
+    snek_array_t s_arr = {.size = size, .elements = arrays};
+
+    s_obj->data.v_array = s_arr;
+    return s_obj;
+}
+
+snek_object_t *new_snek_vector3(snek_object_t *x, snek_object_t *y,
+                                snek_object_t *z) {
+    if ((x == NULL) || (y == NULL) || (z == NULL)) {
         return NULL;
     }
     snek_object_t *s_obj = malloc(sizeof(snek_object_t));

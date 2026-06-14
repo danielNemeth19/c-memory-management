@@ -23,6 +23,14 @@ static int ptr_not_null(void *ptr, char *message) {
     return verdict;
 }
 
+static int ptr_is_null(void *ptr, char *message) {
+    bool verdict = ptr == NULL;
+    if (!verdict) {
+        printf("Failure: %s\n", message);
+    }
+    return verdict;
+}
+
 static int ptr_not_equal(void *ptr1, void *ptr2, char *message) {
     bool verdict = ptr1 != ptr2;
     if (!verdict) {
@@ -135,6 +143,25 @@ void test_snek_vector3_multiple_objects(void) {
     free(vec);
 }
 
+void test_snek_array_create_empty(void) {
+    snek_object_t *obj = new_snek_array(2);
+
+    assert(int_equal(obj->kind, ARRAY));
+    assert(int_equal(obj->data.v_array.size, 2));
+
+    free(obj->data.v_array.elements);
+    free(obj);
+}
+
+void test_snek_array_used_calloc(void) {
+    snek_object_t *obj = new_snek_array(2);
+
+    assert(ptr_is_null(obj->data.v_array.elements[0],
+                       "Must be allocated as null"));
+    assert(ptr_is_null(obj->data.v_array.elements[1],
+                       "Must be allocated as null"));
+}
+
 int main(void) {
     test_integer_constant();
     test_integer_obj();
@@ -147,6 +174,8 @@ int main(void) {
     test_snek_string_copied();
     test_snek_vector3_returns_null();
     test_snek_vector3_multiple_objects();
+    test_snek_array_create_empty();
+    test_snek_array_used_calloc();
     printf("All tests passed.\n");
     return 0;
 }
