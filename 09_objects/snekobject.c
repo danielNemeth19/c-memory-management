@@ -1,20 +1,33 @@
 #include "snekobject.h"
-#include <stdlib.h>
 #include <string.h>
+
+bool snek_array_set(snek_object_t *array, size_t index, snek_object_t *value) {
+    if (array==NULL || value == NULL) {
+        return false;
+    }
+    if (array->kind != ARRAY) {
+        return false;
+    }
+    if (array->data.v_array.size <= index) {
+        return false;
+    }
+    array->data.v_array.elements[index] = value; 
+    return  true;
+}
 
 snek_object_t *new_snek_array(size_t size) {
     snek_object_t *s_obj = malloc(sizeof(snek_object_t));
     if (s_obj == NULL) {
         return NULL;
     }
-    snek_object_t **arrays = calloc(size, sizeof(snek_object_t *));
-    if (arrays == NULL) {
+    snek_object_t **elements = calloc(size, sizeof(snek_object_t *));
+    if (elements == NULL) {
         free(s_obj);
         return NULL;
     }
     s_obj->kind = ARRAY;
 
-    snek_array_t s_arr = {.size = size, .elements = arrays};
+    snek_array_t s_arr = {.size = size, .elements = elements};
 
     s_obj->data.v_array = s_arr;
     return s_obj;

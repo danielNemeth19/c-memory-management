@@ -162,6 +162,50 @@ void test_snek_array_used_calloc(void) {
                        "Must be allocated as null"));
 }
 
+void test_snek_array_set_false(void) {
+    bool res1 = snek_array_set(NULL, 0, NULL);
+    assert(res1 == false);
+
+    snek_object_t *obj = new_snek_array(2);
+    bool res2 = snek_array_set(obj, 0, NULL);
+    assert(res2 == false);
+
+    snek_object_t *obj_int = new_snek_integer(10);
+    snek_object_t *obj_float = new_snek_integer(10.10);
+    bool res3 = snek_array_set(obj_int, 0, obj_float);
+    assert(res2 == false);
+
+    snek_object_t *obj_arr = new_snek_array(2);
+    bool res4 = snek_array_set(obj_arr, 10, obj_int);
+    assert(res4 == false);
+
+    free(obj);
+    free(obj_int);
+    free(obj_float);
+    free(obj_arr);
+}
+
+void test_snek_array_set(void) {
+    snek_object_t *obj = new_snek_array(2);
+
+    assert(ptr_is_null(obj->data.v_array.elements[0], "Allocated as null"));
+    assert(ptr_is_null(obj->data.v_array.elements[1], "Allocated as null"));
+
+    snek_object_t *int_elem = new_snek_integer(5);
+    snek_object_t *float_elem = new_snek_float(10.10);
+
+    snek_array_set(obj, 0, int_elem);
+    snek_array_set(obj, 1, float_elem);
+
+    assert(int_equal(obj->data.v_array.elements[0]->data.v_int, 5));
+    assert(float_equal(obj->data.v_array.elements[1]->data.v_float, 10.10));
+
+    free(int_elem);
+    free(float_elem);
+    free(obj->data.v_array.elements);
+    free(obj);
+}
+
 int main(void) {
     test_integer_constant();
     test_integer_obj();
@@ -176,6 +220,8 @@ int main(void) {
     test_snek_vector3_multiple_objects();
     test_snek_array_create_empty();
     test_snek_array_used_calloc();
+    test_snek_array_set_false();
+    test_snek_array_set();
     printf("All tests passed.\n");
     return 0;
 }
