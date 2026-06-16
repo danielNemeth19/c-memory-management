@@ -1,8 +1,19 @@
 #include "snekobject.h"
 #include <string.h>
 
+snek_object_t *snek_array_get(snek_object_t *array, size_t index) {
+    if (array == NULL || array->kind != ARRAY) {
+        return NULL;
+    }
+    if (array->data.v_array.size <= index) {
+        return NULL;
+    }
+    snek_object_t *elem = array->data.v_array.elements[index];
+    return elem;
+}
+
 bool snek_array_set(snek_object_t *array, size_t index, snek_object_t *value) {
-    if (array==NULL || value == NULL) {
+    if (array == NULL || value == NULL) {
         return false;
     }
     if (array->kind != ARRAY) {
@@ -11,8 +22,8 @@ bool snek_array_set(snek_object_t *array, size_t index, snek_object_t *value) {
     if (array->data.v_array.size <= index) {
         return false;
     }
-    array->data.v_array.elements[index] = value; 
-    return  true;
+    array->data.v_array.elements[index] = value;
+    return true;
 }
 
 snek_object_t *new_snek_array(size_t size) {

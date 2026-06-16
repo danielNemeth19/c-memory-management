@@ -39,6 +39,14 @@ static int ptr_not_equal(void *ptr1, void *ptr2, char *message) {
     return verdict;
 }
 
+static int ptr_equal(void *ptr1, void *ptr2, char *message) {
+    bool verdict = ptr1 == ptr2;
+    if (!verdict) {
+        printf("Failure: %s\n", message);
+    }
+    return verdict;
+}
+
 void test_integer_constant(void) { assert(int_equal(INTEGER, 0)); }
 
 void test_integer_obj(void) {
@@ -206,6 +214,66 @@ void test_snek_array_set(void) {
     free(obj);
 }
 
+void test_snek_array_get_null(void) {
+    snek_object_t *res1 = snek_array_get(NULL, 1);
+    assert(ptr_is_null(res1, "Should return null"));
+
+    snek_object_t *obj_int = new_snek_integer(10);
+    snek_object_t *res2 = snek_array_get(obj_int, 1);
+    assert(ptr_is_null(res2, "Should return null"));
+
+    snek_object_t *obj_array = new_snek_array(2);
+    snek_object_t *obj_char1 = new_snek_string("one");
+    snek_object_t *obj_char2 = new_snek_string("two");
+    assert(snek_array_set(obj_array, 0, obj_char1));
+    assert(snek_array_set(obj_array, 1, obj_char2));
+    snek_object_t *res3 = snek_array_get(obj_array, 3);
+    assert(ptr_is_null(res3, "Should return null"));
+
+    free(res1);
+    free(res2);
+    free(obj_int);
+    free(obj_char1->data.v_string);
+    free(obj_char2->data.v_string);
+    free(obj_char1);
+    free(obj_char2);
+    free(obj_array->data.v_array.elements);
+}
+
+void test_snek_array_get_empty_slot(void) {
+    snek_object_t *obj = new_snek_array(2);
+
+    snek_object_t *empty = snek_array_get(obj, 0);
+    assert(empty == NULL);
+}
+
+void test_snek_array_get(void) {
+    snek_object_t *obj = new_snek_array(2);
+    snek_object_t *first = new_snek_string("First");
+    snek_object_t *second = new_snek_integer(3);
+
+    assert(snek_array_set(obj, 0, first));
+    assert(snek_array_set(obj, 1, second));
+
+    snek_object_t *retrieved_first = snek_array_get(obj, 0);
+    assert(ptr_not_null(retrieved_first, "Should not be null"));
+    assert(int_equal(retrieved_first->kind, STRING));
+    assert(string_equal(retrieved_first->data.v_string, "First"));
+    assert(ptr_equal(first, retrieved_first, "Should be the same object"));
+
+    snek_object_t *retrieved_second = snek_array_get(obj, 1);
+    assert(ptr_not_null(retrieved_second, "Should not be null"));
+    assert(int_equal(retrieved_second->kind, INTEGER));
+    assert(int_equal(retrieved_second->data.v_int, 3));
+    assert(ptr_equal(second, retrieved_second, "Should be the same object"));
+
+    free(first->data.v_string);
+    free(first);
+    free(second);
+    free(obj->data.v_array.elements);
+    free(obj);
+}
+
 int main(void) {
     test_integer_constant();
     test_integer_obj();
@@ -222,6 +290,9 @@ int main(void) {
     test_snek_array_used_calloc();
     test_snek_array_set_false();
     test_snek_array_set();
+    test_snek_array_get_null();
+    test_snek_array_get_empty_slot();
+    test_snek_array_get();
     printf("All tests passed.\n");
     return 0;
 }
