@@ -179,7 +179,7 @@ void test_snek_array_set_false(void) {
     assert(res2 == false);
 
     snek_object_t *obj_int = new_snek_integer(10);
-    snek_object_t *obj_float = new_snek_integer(10.10);
+    snek_object_t *obj_float = new_snek_float(10.10);
     bool res3 = snek_array_set(obj_int, 0, obj_float);
     assert(res2 == false);
 
@@ -274,6 +274,61 @@ void test_snek_array_get(void) {
     free(obj);
 }
 
+void test_snek_length_null(void) {
+    int len = snek_length(NULL);
+    assert(int_equal(len, -1));
+}
+
+void test_snek_length_integer(void) {
+    snek_object_t *obj_int = new_snek_integer(10);
+    int len = snek_length(obj_int);
+    assert(int_equal(len, 1));
+}
+
+void test_snek_length_float(void) {
+    snek_object_t *obj_float = new_snek_float(10.10);
+    int len = snek_length(obj_float);
+    assert(int_equal(len, 1));
+}
+
+void test_snek_length_string(void) {
+    snek_object_t *obj_string = new_snek_string("my string");
+    int len = snek_length(obj_string);
+    assert(int_equal(len, 9));
+    free(obj_string->data.v_string);
+    free(obj_string);
+}
+
+void test_snek_length_vector(void) {
+    snek_object_t *obj1 = new_snek_float(10.1);
+    snek_object_t *obj2 = new_snek_integer(10);
+    snek_object_t *obj3 = new_snek_string("Blaa");
+    snek_object_t *obj_vector3 = new_snek_vector3(obj1, obj2, obj3);
+    int len = snek_length(obj_vector3);
+    assert(int_equal(len, 3));
+
+    free(obj_vector3->data.v_vector3.x);
+    free(obj_vector3->data.v_vector3.y);
+    free(obj_vector3->data.v_vector3.z->data.v_string);
+    free(obj_vector3->data.v_vector3.z);
+    free(obj_vector3);
+}
+
+void test_snek_length_array(void) {
+    snek_object_t *i = new_snek_integer(1);
+    snek_object_t *arr = new_snek_array(4);
+
+    assert(snek_array_set(arr, 0, i));
+    assert(snek_array_set(arr, 1, i));
+    assert(snek_array_set(arr, 2, i));
+
+    assert(int_equal(arr->data.v_array.size, 4));
+
+    free(i);
+    free(arr->data.v_array.elements);
+    free(arr);
+}
+
 int main(void) {
     test_integer_constant();
     test_integer_obj();
@@ -293,6 +348,12 @@ int main(void) {
     test_snek_array_get_null();
     test_snek_array_get_empty_slot();
     test_snek_array_get();
+    test_snek_length_null();
+    test_snek_length_integer();
+    test_snek_length_float();
+    test_snek_length_string();
+    test_snek_length_vector();
+    test_snek_length_array();
     printf("All tests passed.\n");
     return 0;
 }

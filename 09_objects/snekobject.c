@@ -1,6 +1,25 @@
 #include "snekobject.h"
 #include <string.h>
 
+int snek_length(snek_object_t *obj) {
+    if (obj == NULL) {
+        return -1;
+    }
+    if (obj->kind == INTEGER || obj->kind == FLOAT) {
+        return 1;
+    }
+    if (obj->kind == STRING) {
+        return strlen(obj->data.v_string);
+    }
+    if (obj->kind == VECTOR3) {
+        return 3;
+    }
+    if (obj->kind == ARRAY) {
+        return obj->data.v_array.size;
+    }
+    return -1;
+}
+
 snek_object_t *snek_array_get(snek_object_t *array, size_t index) {
     if (array == NULL || array->kind != ARRAY) {
         return NULL;
