@@ -1,23 +1,59 @@
 #include "snekobject.h"
+#include <stdlib.h>
 #include <string.h>
+
+snek_object_t *snek_add(snek_object_t *a, snek_object_t *b) {
+    if (a == NULL || b == NULL) {
+        return NULL;
+    }
+    snek_object_t *new_obj = malloc(sizeof(snek_object_t));
+    if (a->kind == INTEGER) {
+        if (b->kind == INTEGER) {
+            new_obj->kind = INTEGER;
+            new_obj->data.v_int = a->data.v_int + b->data.v_int;
+            return new_obj;
+        }
+        if (b->kind == FLOAT) {
+            new_obj->kind = FLOAT;
+            new_obj->data.v_float = (float)a->data.v_int + b->data.v_float;
+            return new_obj;
+        }
+        free(new_obj);
+        return NULL; 
+    }
+    if (a->kind == FLOAT) {
+        new_obj->kind = FLOAT;
+        if (b->kind == INTEGER) {
+            new_obj->data.v_float = a->data.v_float + (float)b->data.v_int;
+            return new_obj;
+        }
+        if (b->kind == FLOAT) {
+            new_obj->data.v_float = a->data.v_float + b->data.v_float;
+            return new_obj;
+        }
+        free(new_obj);
+        return NULL;
+    }
+}
 
 int snek_length(snek_object_t *obj) {
     if (obj == NULL) {
         return -1;
     }
-    if (obj->kind == INTEGER || obj->kind == FLOAT) {
+    switch (obj->kind) {
+    case INTEGER:
         return 1;
-    }
-    if (obj->kind == STRING) {
+    case FLOAT:
+        return 1;
+    case STRING:
         return strlen(obj->data.v_string);
-    }
-    if (obj->kind == VECTOR3) {
+    case VECTOR3:
         return 3;
-    }
-    if (obj->kind == ARRAY) {
+    case ARRAY:
         return obj->data.v_array.size;
+    default:
+        return -1;
     }
-    return -1;
 }
 
 snek_object_t *snek_array_get(snek_object_t *array, size_t index) {

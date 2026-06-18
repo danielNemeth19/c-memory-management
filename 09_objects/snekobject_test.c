@@ -329,6 +329,48 @@ void test_snek_length_array(void) {
     free(arr);
 }
 
+void test_snek_add_null(void) {
+    snek_object_t *obj = new_snek_integer(10);
+    snek_object_t *null_1 = snek_add(NULL, obj);
+    assert(ptr_is_null(null_1, "Should return NULL"));
+    snek_object_t *null_2 = snek_add(obj, NULL);
+    assert(ptr_is_null(null_2, "Should return NULL"));
+}
+
+void test_snek_add_integer(void) {
+    snek_object_t *int_part = new_snek_integer(5);
+
+    snek_object_t *int_sum = snek_add(int_part, int_part);
+    assert(int_equal(int_sum->kind, INTEGER));
+    assert(int_equal(int_sum->data.v_int, 10));
+
+    free(int_part);
+    free(int_sum);
+}
+
+void test_snek_add_float(void) {
+    snek_object_t *int_part = new_snek_integer(5);
+    snek_object_t *float_part = new_snek_float(10.5);
+
+    snek_object_t *float_1 = snek_add(int_part, float_part);
+    assert(int_equal(float_1->kind, FLOAT));
+    assert(float_equal(float_1->data.v_float, 15.5));
+
+    snek_object_t *float_2 = snek_add(int_part, float_part);
+    assert(int_equal(float_2->kind, FLOAT));
+    assert(float_equal(float_2->data.v_float, 15.5));
+
+    snek_object_t *float_3 = snek_add(float_part, float_part);
+    assert(int_equal(float_3->kind, FLOAT));
+    assert(float_equal(float_3->data.v_float, 21.0));
+
+    free(int_part);
+    free(float_part);
+    free(float_1);
+    free(float_2);
+    free(float_3);
+}
+
 int main(void) {
     test_integer_constant();
     test_integer_obj();
@@ -354,6 +396,9 @@ int main(void) {
     test_snek_length_string();
     test_snek_length_vector();
     test_snek_length_array();
+    test_snek_add_null();
+    test_snek_add_integer();
+    test_snek_add_float();
     printf("All tests passed.\n");
     return 0;
 }
