@@ -6,34 +6,61 @@ snek_object_t *snek_add(snek_object_t *a, snek_object_t *b) {
     if (a == NULL || b == NULL) {
         return NULL;
     }
-    snek_object_t *new_obj = malloc(sizeof(snek_object_t));
     if (a->kind == INTEGER) {
         if (b->kind == INTEGER) {
-            new_obj->kind = INTEGER;
-            new_obj->data.v_int = a->data.v_int + b->data.v_int;
+            int sum = a->data.v_int + b->data.v_int;
+            snek_object_t *new_obj = new_snek_integer(sum);
             return new_obj;
         }
         if (b->kind == FLOAT) {
-            new_obj->kind = FLOAT;
-            new_obj->data.v_float = (float)a->data.v_int + b->data.v_float;
+            float sum = a->data.v_int + b->data.v_float;
+            snek_object_t *new_obj = new_snek_float(sum);
             return new_obj;
         }
-        free(new_obj);
         return NULL; 
     }
     if (a->kind == FLOAT) {
-        new_obj->kind = FLOAT;
         if (b->kind == INTEGER) {
-            new_obj->data.v_float = a->data.v_float + (float)b->data.v_int;
+            float sum = a->data.v_float + (float)b->data.v_int;
+            snek_object_t *new_obj = new_snek_float(sum);
             return new_obj;
         }
         if (b->kind == FLOAT) {
-            new_obj->data.v_float = a->data.v_float + b->data.v_float;
+            float sum = a->data.v_float + b->data.v_float;
+            snek_object_t *new_obj = new_snek_float(sum);
             return new_obj;
         }
-        free(new_obj);
         return NULL;
     }
+    if (a->kind == STRING) {
+        if (b->kind != STRING) {
+            return NULL;
+        }
+        int t_len = strlen(a->data.v_string) + strlen(b->data.v_string) + 1;
+        char *interim = calloc(t_len, sizeof(char));
+        strcat(interim, a->data.v_string);
+        strcat(interim, b->data.v_string);
+        snek_object_t *res = new_snek_string(interim);
+        free(interim);
+        return res;
+    }
+    if (a->kind == VECTOR3) {
+        if (b->kind != VECTOR3) {
+            return NULL;
+        }
+        snek_object_t *vx = snek_add(a->data.v_vector3.x, b->data.v_vector3.x);
+        snek_object_t *vy = snek_add(a->data.v_vector3.y, b->data.v_vector3.y);
+        snek_object_t *vz = snek_add(a->data.v_vector3.z, b->data.v_vector3.z);
+        snek_object_t *new_obj = new_snek_vector3(vx, vy, vz);
+        return new_obj;
+    }
+    if (a->kind == ARRAY) {
+        if (b->kind != ARRAY) {
+            return NULL;
+        }
+    }
+    int len = a->data.v_array.size + b->data.v_array.size;
+    snek_object_t *new_obj_array = new_snek_array(len);
 }
 
 int snek_length(snek_object_t *obj) {

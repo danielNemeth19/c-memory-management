@@ -371,6 +371,72 @@ void test_snek_add_float(void) {
     free(float_3);
 }
 
+void test_snek_add_string_invalid(void) {
+    snek_object_t *str_part = new_snek_string("first");
+    snek_object_t *null_obj = snek_add(str_part, NULL);
+    assert(ptr_is_null(null_obj, "Should return NULL"));
+
+    free(str_part->data.v_string);
+    free(str_part);
+}
+
+void test_snek_add_string(void) {
+    snek_object_t *first_part = new_snek_string("first");
+    snek_object_t *second_part = new_snek_string("second");
+
+    snek_object_t *obj = snek_add(first_part, second_part);
+    assert(ptr_not_null(obj, "Should not be null"));
+    assert(string_equal(obj->data.v_string, "firstsecond"));
+
+    free(first_part->data.v_string);
+    free(second_part->data.v_string);
+    free(first_part);
+    free(second_part);
+    free(obj->data.v_string);
+    free(obj);
+}
+
+void test_snek_add_vector3_invalid(void) {
+    snek_object_t *obj1 = new_snek_float(10.1);
+    snek_object_t *obj2 = new_snek_integer(10);
+    snek_object_t *obj3 = new_snek_string("Blaa");
+
+    snek_object_t *vec = new_snek_vector3(obj1, obj2, obj3);
+    snek_object_t *null_obj = snek_add(vec, NULL);
+    assert(ptr_is_null(null_obj, "Should return NULL"));
+
+    free(obj1);
+    free(obj2);
+    free(obj3);
+    free(vec);
+}
+
+void test_snek_add_vector3(void) {
+    snek_object_t *v1_x = new_snek_integer(1);
+    snek_object_t *v1_y = new_snek_integer(2);
+    snek_object_t *v1_z = new_snek_integer(3);
+    snek_object_t *vec1 = new_snek_vector3(v1_x, v1_y, v1_z);
+
+    snek_object_t *v2_x = new_snek_integer(1);
+    snek_object_t *v2_y = new_snek_integer(2);
+    snek_object_t *v2_z = new_snek_integer(3);
+    snek_object_t *vec2 = new_snek_vector3(v2_x, v2_y, v2_z);
+
+    snek_object_t *vec_sum = snek_add(vec1, vec2);
+
+    assert(int_equal(vec_sum->data.v_vector3.x->data.v_int, 2));
+    assert(int_equal(vec_sum->data.v_vector3.y->data.v_int, 4));
+    assert(int_equal(vec_sum->data.v_vector3.z->data.v_int, 6));
+
+    free(v1_x);
+    free(v1_y);
+    free(v1_z);
+    free(v2_x);
+    free(v2_y);
+    free(v2_z);
+    free(vec_sum);
+}
+
 int main(void) {
     test_integer_constant();
     test_integer_obj();
@@ -399,6 +465,10 @@ int main(void) {
     test_snek_add_null();
     test_snek_add_integer();
     test_snek_add_float();
+    test_snek_add_string_invalid();
+    test_snek_add_string();
+    test_snek_add_vector3_invalid();
+    test_snek_add_vector3();
     printf("All tests passed.\n");
     return 0;
 }
