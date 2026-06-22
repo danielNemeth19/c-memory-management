@@ -17,7 +17,7 @@ snek_object_t *snek_add(snek_object_t *a, snek_object_t *b) {
             snek_object_t *new_obj = new_snek_float(sum);
             return new_obj;
         }
-        return NULL; 
+        return NULL;
     }
     if (a->kind == FLOAT) {
         if (b->kind == INTEGER) {
@@ -51,6 +51,12 @@ snek_object_t *snek_add(snek_object_t *a, snek_object_t *b) {
         snek_object_t *vx = snek_add(a->data.v_vector3.x, b->data.v_vector3.x);
         snek_object_t *vy = snek_add(a->data.v_vector3.y, b->data.v_vector3.y);
         snek_object_t *vz = snek_add(a->data.v_vector3.z, b->data.v_vector3.z);
+        if (vx == NULL || vy == NULL || vz == NULL) {
+            free(vx);
+            free(vy);
+            free(vz);
+            return NULL;
+        }
         snek_object_t *new_obj = new_snek_vector3(vx, vy, vz);
         return new_obj;
     }
@@ -58,9 +64,20 @@ snek_object_t *snek_add(snek_object_t *a, snek_object_t *b) {
         if (b->kind != ARRAY) {
             return NULL;
         }
+        int len = a->data.v_array.size + b->data.v_array.size;
+        snek_object_t *new_obj_array = new_snek_array(len);
+        for (int i = 0; i < a->data.v_array.size; i++) {
+            snek_object_t *curr_arr = snek_array_get(a, i);
+            bool store = snek_array_set(new_obj_array, i, curr_arr);
+        }
+        int b_index = a->data.v_array.size;
+        for (int y = 0; y < b->data.v_array.size; y++) {
+            snek_object_t *curr_arr = snek_array_get(b, y);
+            bool store = snek_array_set(new_obj_array, b_index + y, curr_arr);
+        }
+        return new_obj_array;
     }
-    int len = a->data.v_array.size + b->data.v_array.size;
-    snek_object_t *new_obj_array = new_snek_array(len);
+    return NULL;
 }
 
 int snek_length(snek_object_t *obj) {

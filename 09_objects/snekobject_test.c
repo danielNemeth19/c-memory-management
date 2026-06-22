@@ -437,6 +437,55 @@ void test_snek_add_vector3(void) {
     free(vec_sum);
 }
 
+void test_snek_add_array_invalid(void) {
+    snek_object_t *arr = new_snek_array(2);
+    snek_object_t *arr_elem_1 = new_snek_integer(8);
+    snek_object_t *arr_elem_2 = new_snek_integer(7);
+    snek_array_set(arr, 0, arr_elem_1);
+    snek_array_set(arr, 1, arr_elem_2);
+
+    snek_object_t *null_obj = snek_add(arr, NULL);
+    assert(ptr_is_null(null_obj, "Should return NULL"));
+
+    free(arr_elem_1);
+    free(arr_elem_2);
+    free(arr->data.v_array.elements);
+    free(arr);
+}
+
+void test_snek_add_array(void) {
+    snek_object_t *arr_1 = new_snek_array(2);
+    snek_object_t *arr_1_elem_1 = new_snek_integer(8);
+    snek_object_t *arr_1_elem_2 = new_snek_integer(7);
+    snek_array_set(arr_1, 0, arr_1_elem_1);
+    snek_array_set(arr_1, 1, arr_1_elem_2);
+
+    snek_object_t *arr_2 = new_snek_array(2);
+    snek_object_t *arr_2_elem_1 = new_snek_integer(6);
+    snek_object_t *arr_2_elem_2 = new_snek_integer(5);
+    snek_array_set(arr_2, 0, arr_2_elem_1);
+    snek_array_set(arr_2, 1, arr_2_elem_2);
+
+    snek_object_t *arr_sum = snek_add(arr_1, arr_2);
+    assert(int_equal(arr_sum->data.v_array.size, 4));
+
+    assert(int_equal(arr_sum->data.v_array.elements[0]->data.v_int, 8));
+    assert(int_equal(arr_sum->data.v_array.elements[1]->data.v_int, 7));
+    assert(int_equal(arr_sum->data.v_array.elements[2]->data.v_int, 6));
+    assert(int_equal(arr_sum->data.v_array.elements[3]->data.v_int, 5));
+
+    free(arr_1_elem_1);
+    free(arr_1_elem_2);
+    free(arr_2_elem_1);
+    free(arr_2_elem_2);
+    free(arr_1->data.v_array.elements);
+    free(arr_2->data.v_array.elements);
+    free(arr_sum->data.v_array.elements);
+    free(arr_1);
+    free(arr_2);
+    free(arr_sum);
+}
+
 int main(void) {
     test_integer_constant();
     test_integer_obj();
@@ -469,6 +518,8 @@ int main(void) {
     test_snek_add_string();
     test_snek_add_vector3_invalid();
     test_snek_add_vector3();
+    test_snek_add_array_invalid();
+    test_snek_add_array();
     printf("All tests passed.\n");
     return 0;
 }
