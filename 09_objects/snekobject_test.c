@@ -453,6 +453,7 @@ void test_snek_add_array_invalid(void) {
     free(arr);
 }
 
+
 void test_snek_add_array(void) {
     snek_object_t *arr_1 = new_snek_array(2);
     snek_object_t *arr_1_elem_1 = new_snek_integer(8);
@@ -484,6 +485,18 @@ void test_snek_add_array(void) {
     free(arr_1);
     free(arr_2);
     free(arr_sum);
+}
+
+void test_snek_new_int_refcount(void) {
+    snek_object_t *int_obj = new_snek_integer(10);
+    assert(int_equal(int_obj->refcount, 1));
+    free(int_obj);
+}
+
+void test_snek_new_float_refcount(void) {
+    snek_object_t *float_obj = new_snek_float(2.34);
+    assert(int_equal(float_obj->refcount, 1));
+    free(float_obj);
 }
 
 int main(void) {
@@ -520,6 +533,8 @@ int main(void) {
     test_snek_add_vector3();
     test_snek_add_array_invalid();
     test_snek_add_array();
+    test_snek_new_int_refcount();
+    test_snek_new_float_refcount();
     printf("All tests passed.\n");
     return 0;
 }
