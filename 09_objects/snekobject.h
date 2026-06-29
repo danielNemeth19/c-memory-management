@@ -46,3 +46,5 @@ bool snek_array_set(snek_object_t *array, size_t index, snek_object_t *value);
 snek_object_t *snek_array_get(snek_object_t *array, size_t index);
 int snek_length(snek_object_t *obj);
 snek_object_t *snek_add(snek_object_t *a, snek_object_t *b);
+
+void refcount_inc(snek_object_t *obj);

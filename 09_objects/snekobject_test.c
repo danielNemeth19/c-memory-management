@@ -498,6 +498,24 @@ void test_snek_new_float_refcount(void) {
     assert(int_equal(float_obj->refcount, 1));
     free(float_obj);
 }
+void test_snek_refcount_inc(void) {
+    snek_object_t *int_obj = new_snek_integer(10);
+    assert(int_equal(int_obj->refcount, 1));
+    refcount_inc(int_obj);
+    assert(int_equal(int_obj->refcount, 2));
+    free(int_obj);
+}
+
+void test_snek_refcount_more(void) {
+    snek_object_t *string_obj = new_snek_string("hello");
+    assert(int_equal(string_obj->refcount, 1));
+    int target = 9;
+    for (int i=0; i < target; i++) {
+        refcount_inc(string_obj);
+    }
+    assert(int_equal(string_obj->refcount, 10));
+    free(string_obj);
+}
 
 int main(void) {
     test_integer_constant();
@@ -535,6 +553,8 @@ int main(void) {
     test_snek_add_array();
     test_snek_new_int_refcount();
     test_snek_new_float_refcount();
+    test_snek_refcount_inc();
+    test_snek_refcount_more();
     printf("All tests passed.\n");
     return 0;
 }

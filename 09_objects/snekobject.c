@@ -12,6 +12,13 @@ static snek_object_t *_new_snek_object() {
     return s_obj;
 }
 
+void refcount_inc(snek_object_t *obj) {
+    if (obj == NULL) {
+        return;
+    }
+    obj->refcount++;
+}
+
 static snek_object_t *_snek_add_int_to_number(int a_int, snek_object_t *b) {
     switch (b->kind) {
     case INTEGER: {
