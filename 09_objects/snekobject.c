@@ -19,6 +19,36 @@ void refcount_inc(snek_object_t *obj) {
     obj->refcount++;
 }
 
+void refcount_dec(snek_object_t *obj) {
+    if (obj == NULL) {
+        return;
+    }
+    obj->refcount--;
+    if (obj->refcount == 0) {
+        refcount_free(obj);
+    }
+}
+
+void refcount_free(snek_object_t *obj) {
+    switch (obj->kind) {
+    case INTEGER: {
+        free(obj);
+        return;
+    }
+    case FLOAT: {
+        free(obj);
+        return;
+    }
+    case STRING: {
+        free(obj->data.v_string);
+        free(obj);
+        return;
+    }
+    default:
+        return;
+    }
+}
+
 static snek_object_t *_snek_add_int_to_number(int a_int, snek_object_t *b) {
     switch (b->kind) {
     case INTEGER: {
@@ -259,4 +289,3 @@ snek_object_t *new_snek_float(float value) {
     s_obj->data.v_float = value;
     return s_obj;
 }
-
