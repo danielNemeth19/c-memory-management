@@ -4,6 +4,22 @@
 #include <stdio.h>
 #include <string.h>
 
+/* # define MAX_TRACKED 1024 */
+/* static void *freed_ptrs[MAX_TRACKED]; */
+/* static int freed_count = 0; */
+
+/* void track_freed(void *p){ */
+    /* freed_ptrs[freed_count++] = p; */
+/* } */
+
+/* bool boot_is_freed(void *p) { */
+    /* printf("pointer here %d\n", p); */
+    /* for (int i=0; i < freed_count; i++) { */
+        /* if (freed_ptrs[i] == p) return true ; */
+    /* } */
+    /* return false; */
+/* } */
+
 static int int_equal(int a, int b) { return (a - b) == 0; };
 
 static int float_equal(float a, float b) {
@@ -526,6 +542,61 @@ void test_snek_refcount_dec(void) {
     free(int_obj);
 }
 
+void test_snek_vector3_refcount(void) {
+    snek_object_t *obj1 = new_snek_float(10.1);
+    snek_object_t *obj2 = new_snek_integer(10);
+    snek_object_t *obj3 = new_snek_string("Blaa");
+
+    snek_object_t *vec = new_snek_vector3(obj1, obj2, obj3);
+    assert(int_equal(vec->refcount, 1));
+    
+    assert(int_equal(obj1->refcount, 2));
+    assert(int_equal(obj2->refcount, 2));
+    assert(int_equal(obj3->refcount, 2));
+
+    refcount_dec(obj1);
+    // obj1 is still referenced in 'vec'
+    assert(int_equal(obj1->refcount, 1));
+
+    refcount_dec(vec);
+    /* assert(boot_is_freed(obj1)); */
+    
+    // these still have the original reference
+    assert(int_equal(obj2->refcount, 1));
+    assert(int_equal(obj3->refcount, 1));
+
+    //free everything
+    refcount_dec(obj2);
+    refcount_dec(obj3);
+}
+
+void test_snek_vector3_refcounting_same(void) {
+    snek_object_t *foo = new_snek_integer(1);
+
+    snek_object_t *vec = new_snek_vector3(foo, foo, foo);
+    assert(int_equal(foo->refcount, 4));
+
+    refcount_dec(foo);
+    assert(int_equal(foo->refcount, 3));
+    
+    refcount_dec(vec);
+    // should be freed but this bad test
+    /* assert(int_equal(foo->refcount, 0)); */
+}
+
+void test_snek_allocated_string_is_freed(void) {
+    snek_object_t *obj = new_snek_string("Hello");
+
+    refcount_inc(obj);
+    assert(int_equal(obj->refcount, 2));
+    refcount_dec(obj);
+    assert(int_equal(obj->refcount, 1));
+
+    assert(string_equal(obj->data.v_string, "Hello"));
+    refcount_dec(obj);
+    // at this point object should be freed
+}
+
 int main(void) {
     test_integer_constant();
     test_integer_obj();
@@ -565,6 +636,9 @@ int main(void) {
     test_snek_refcount_inc();
     test_snek_refcount_more();
     test_snek_refcount_dec();
+    test_snek_vector3_refcount();
+    test_snek_vector3_refcounting_same();
+    test_snek_allocated_string_is_freed();
     printf("All tests passed.\n");
     return 0;
 }

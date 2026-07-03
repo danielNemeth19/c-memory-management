@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 static snek_object_t *_new_snek_object() {
     snek_object_t *s_obj = calloc(1, sizeof(snek_object_t));
@@ -42,6 +43,12 @@ void refcount_free(snek_object_t *obj) {
     case STRING: {
         free(obj->data.v_string);
         free(obj);
+        return;
+    }
+    case VECTOR3: {
+        refcount_dec(obj->data.v_vector3.x);
+        refcount_dec(obj->data.v_vector3.y);
+        refcount_dec(obj->data.v_vector3.z);
         return;
     }
     default:
@@ -239,11 +246,14 @@ snek_object_t *new_snek_vector3(snek_object_t *x, snek_object_t *y,
     if (s_obj == NULL) {
         return NULL;
     }
-
     s_obj->kind = VECTOR3;
     s_obj->data.v_vector3.x = x;
     s_obj->data.v_vector3.y = y;
     s_obj->data.v_vector3.z = z;
+
+    refcount_inc(x);
+    refcount_inc(y);
+    refcount_inc(z);
     return s_obj;
 }
 
