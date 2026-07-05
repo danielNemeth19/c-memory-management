@@ -25,7 +25,7 @@ test-stack:
 	gcc 08_stack_data_structures/snekstack.c 08_stack_data_structures/snekstack_test.c -o test_suite.o && ./test_suite.o
 
 test-objects:
-	gcc 09_objects/snekobject.c 09_objects/snekobject_test.c -o test_suite.o && ./test_suite.o
+	gcc -fsanitize=address 09_objects/snekobject.c 09_objects/snekobject_test.c -o test_suite.o && ./test_suite.o
 
 clean:
 	rm -rf *.o *.out

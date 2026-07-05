@@ -9,15 +9,15 @@
 /* static int freed_count = 0; */
 
 /* void track_freed(void *p){ */
-    /* freed_ptrs[freed_count++] = p; */
+/* freed_ptrs[freed_count++] = p; */
 /* } */
 
 /* bool boot_is_freed(void *p) { */
-    /* printf("pointer here %d\n", p); */
-    /* for (int i=0; i < freed_count; i++) { */
-        /* if (freed_ptrs[i] == p) return true ; */
-    /* } */
-    /* return false; */
+/* printf("pointer here %d\n", p); */
+/* for (int i=0; i < freed_count; i++) { */
+/* if (freed_ptrs[i] == p) return true ; */
+/* } */
+/* return false; */
 /* } */
 
 static int int_equal(int a, int b) { return (a - b) == 0; };
@@ -143,6 +143,10 @@ void test_snek_vector3_returns_null(void) {
 
     snek_object_t *s_obj = new_snek_vector3(obj1, obj2, NULL);
     assert(s_obj == NULL);
+
+    free(obj1);
+    free(obj2);
+    free(s_obj);
 }
 
 void test_snek_vector3_multiple_objects(void) {
@@ -163,6 +167,7 @@ void test_snek_vector3_multiple_objects(void) {
 
     free(obj1);
     free(obj2);
+    free(obj3->data.v_string);
     free(obj3);
     free(vec);
 }
@@ -184,6 +189,9 @@ void test_snek_array_used_calloc(void) {
                        "Must be allocated as null"));
     assert(ptr_is_null(obj->data.v_array.elements[1],
                        "Must be allocated as null"));
+
+    free(obj->data.v_array.elements);
+    free(obj);
 }
 
 void test_snek_array_set_false(void) {
@@ -203,9 +211,11 @@ void test_snek_array_set_false(void) {
     bool res4 = snek_array_set(obj_arr, 10, obj_int);
     assert(res4 == false);
 
+    free(obj->data.v_array.elements);
     free(obj);
     free(obj_int);
     free(obj_float);
+    free(obj_arr->data.v_array.elements);
     free(obj_arr);
 }
 
@@ -254,6 +264,7 @@ void test_snek_array_get_null(void) {
     free(obj_char1);
     free(obj_char2);
     free(obj_array->data.v_array.elements);
+    free(obj_array);
 }
 
 void test_snek_array_get_empty_slot(void) {
@@ -261,6 +272,9 @@ void test_snek_array_get_empty_slot(void) {
 
     snek_object_t *empty = snek_array_get(obj, 0);
     assert(empty == NULL);
+
+    free(obj->data.v_array.elements);
+    free(obj);
 }
 
 void test_snek_array_get(void) {
@@ -299,12 +313,14 @@ void test_snek_length_integer(void) {
     snek_object_t *obj_int = new_snek_integer(10);
     int len = snek_length(obj_int);
     assert(int_equal(len, 1));
+    free(obj_int);
 }
 
 void test_snek_length_float(void) {
     snek_object_t *obj_float = new_snek_float(10.10);
     int len = snek_length(obj_float);
     assert(int_equal(len, 1));
+    free(obj_float);
 }
 
 void test_snek_length_string(void) {
@@ -322,11 +338,10 @@ void test_snek_length_vector(void) {
     snek_object_t *obj_vector3 = new_snek_vector3(obj1, obj2, obj3);
     int len = snek_length(obj_vector3);
     assert(int_equal(len, 3));
-
-    free(obj_vector3->data.v_vector3.x);
-    free(obj_vector3->data.v_vector3.y);
-    free(obj_vector3->data.v_vector3.z->data.v_string);
-    free(obj_vector3->data.v_vector3.z);
+    free(obj1);
+    free(obj2);
+    free(obj3->data.v_string);
+    free(obj3);
     free(obj_vector3);
 }
 
@@ -351,6 +366,7 @@ void test_snek_add_null(void) {
     assert(ptr_is_null(null_1, "Should return NULL"));
     snek_object_t *null_2 = snek_add(obj, NULL);
     assert(ptr_is_null(null_2, "Should return NULL"));
+    free(obj);
 }
 
 void test_snek_add_integer(void) {
@@ -423,8 +439,10 @@ void test_snek_add_vector3_invalid(void) {
 
     free(obj1);
     free(obj2);
+    free(obj3->data.v_string);
     free(obj3);
     free(vec);
+    free(null_obj);
 }
 
 void test_snek_add_vector3(void) {
@@ -450,6 +468,11 @@ void test_snek_add_vector3(void) {
     free(v2_x);
     free(v2_y);
     free(v2_z);
+    free(vec1);
+    free(vec2);
+    free(vec_sum->data.v_vector3.x);
+    free(vec_sum->data.v_vector3.y);
+    free(vec_sum->data.v_vector3.z);
     free(vec_sum);
 }
 
@@ -530,6 +553,7 @@ void test_snek_refcount_more(void) {
         refcount_inc(string_obj);
     }
     assert(int_equal(string_obj->refcount, 10));
+    free(string_obj->data.v_string);
     free(string_obj);
 }
 
@@ -549,7 +573,7 @@ void test_snek_vector3_refcount(void) {
 
     snek_object_t *vec = new_snek_vector3(obj1, obj2, obj3);
     assert(int_equal(vec->refcount, 1));
-    
+
     assert(int_equal(obj1->refcount, 2));
     assert(int_equal(obj2->refcount, 2));
     assert(int_equal(obj3->refcount, 2));
@@ -560,12 +584,12 @@ void test_snek_vector3_refcount(void) {
 
     refcount_dec(vec);
     /* assert(boot_is_freed(obj1)); */
-    
+
     // these still have the original reference
     assert(int_equal(obj2->refcount, 1));
     assert(int_equal(obj3->refcount, 1));
 
-    //free everything
+    // free everything
     refcount_dec(obj2);
     refcount_dec(obj3);
 }
@@ -578,7 +602,7 @@ void test_snek_vector3_refcounting_same(void) {
 
     refcount_dec(foo);
     assert(int_equal(foo->refcount, 3));
-    
+
     refcount_dec(vec);
     // should be freed but this bad test
     /* assert(int_equal(foo->refcount, 0)); */
@@ -595,6 +619,46 @@ void test_snek_allocated_string_is_freed(void) {
     assert(string_equal(obj->data.v_string, "Hello"));
     refcount_dec(obj);
     // at this point object should be freed
+}
+
+void test_snek_array_set_refcount(void) {
+    snek_object_t *int_obj = new_snek_integer(1);
+    snek_object_t *array = new_snek_array(1);
+
+    snek_array_set(array, 0, int_obj);
+    assert(int_equal(int_obj->refcount, 2));
+
+    assert(int_equal(array->refcount, 1));
+
+    refcount_dec(int_obj);
+    refcount_dec(array);
+    // at this point all objects should be freed
+}
+
+void test_snek_array_free(void) {
+    snek_object_t *foo = new_snek_integer(1);
+    snek_object_t *bar = new_snek_integer(2);
+    snek_object_t *baz = new_snek_integer(3);
+
+    snek_object_t *array = new_snek_array(2);
+    snek_array_set(array, 0, foo);
+    snek_array_set(array, 1, bar);
+    
+    assert(int_equal(foo->refcount, 2));
+    assert(int_equal(bar->refcount, 2));
+    assert(int_equal(baz->refcount, 1));
+
+    refcount_dec(foo);
+    // `foo` is still referenced in the array
+    assert(int_equal(foo->refcount, 1));
+
+    snek_array_set(array, 0, baz);
+    assert(int_equal(baz->refcount, 2));
+
+    refcount_dec(bar);
+    refcount_dec(baz);
+    refcount_dec(array);
+    // at this point all objects should be freed
 }
 
 int main(void) {
@@ -639,6 +703,8 @@ int main(void) {
     test_snek_vector3_refcount();
     test_snek_vector3_refcounting_same();
     test_snek_allocated_string_is_freed();
+    test_snek_array_set_refcount();
+    test_snek_array_free();
     printf("All tests passed.\n");
     return 0;
 }
