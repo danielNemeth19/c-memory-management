@@ -27,6 +27,9 @@ test-stack:
 test-objects:
 	gcc -fsanitize=address 09_objects/snekobject.c 09_objects/snekobject_test.c -o test_suite.o && ./test_suite.o
 
+test-refcounting:
+	gcc -fsanitize=address 10_refcounting_gc/snekobject.c 10_refcounting_gc/snekobject_test.c -o test_suite.o && ./test_suite.o
+
 clean:
 	rm -rf *.o *.out
 
