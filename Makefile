@@ -1,4 +1,4 @@
-.PHONY: build-basics test-basics test-structs test-pointers test-enums test-unions test-adv-pointers test-stack test-objects
+.PHONY: build-basics test-basics test-structs test-pointers test-enums test-unions test-adv-pointers test-stack test-objects test-refcounting test-marksweep
 
 build-basics:
 	gcc basics/main.c -o main.o
@@ -29,6 +29,9 @@ test-objects:
 
 test-refcounting:
 	gcc -fsanitize=address 10_refcounting_gc/snekobject.c 10_refcounting_gc/snekobject_test.c -o test_suite.o && ./test_suite.o
+
+test-marksweep:
+	gcc -fsanitize=address 11_mark_and_sweep_gc/snekobject.c 11_mark_and_sweep_gc/snekobject_test.c -o test_suite.o && ./test_suite.o
 
 clean:
 	rm -rf *.o *.out
