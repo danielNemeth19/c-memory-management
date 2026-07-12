@@ -657,7 +657,7 @@ void test_cycles_good(void) {
     // all free
 }
 
-void test_cycles_bad(void) {
+void test_cycles_bad_for_now(void) {
     snek_object_t *first = new_snek_array(1);
     snek_object_t *second = new_snek_array(1);
     // refcounts: first = 1, second = 1
@@ -717,7 +717,7 @@ int main(void) {
     test_snek_array_set_refcount();
     test_snek_array_free();
     test_cycles_good();
-    test_cycles_bad();
+    test_cycles_bad_for_now();
     printf("All tests passed.\n");
     return 0;
 }
