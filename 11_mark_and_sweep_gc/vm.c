@@ -19,4 +19,11 @@ void vm_free(vm_t *vm) {
     free(vm);
 }
 
+void vm_frame_push(vm_t *vm, frame_t *frame) {
+    if (vm==NULL) {
+        return;
+    }
+    stack_push(vm->frames, frame);
+}
+
 #endif // VM_H

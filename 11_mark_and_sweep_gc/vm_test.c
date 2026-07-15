@@ -54,8 +54,14 @@ void test_vm_new(void) {
     vm_free(vm);
 }
 
+void test_vm_free(void) {
+    vm_t *vm = vm_new();
+    vm_free(vm);
+}
+
 int main(void) {
     test_vm_new();
+    test_vm_free();
     printf("All tests passed.\n");
     return 0;
 }
