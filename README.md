@@ -207,6 +207,58 @@ printf("%d\n", *ptr);  // Output: 3
 In these examples, the pointer manipulation demonstatrates how you can traverse an array using pointer arithmetic, achieving the same results
 as with traditional array indexing.
 
+
+## Enums
+
+### Summary
+
+Enums in C allow you to create a set of named integer constants. They are defined using the `enum` keyword and can be made easier to use
+with `typedef`. Enums are not collections but rather a way to define a custom type that can have one of the specified named values.
+Each name in an enum corresponds to an integer, starting from zero by default.
+
+### Examples
+
+```c
+typedef enum Colors {
+    RED,
+    GREEN,
+    BLUE
+} color_t;
+
+typedef enum Car {
+    char *model;
+    color_t color;
+} car_t;
+
+car_t myCar;
+myCar.model = "Falcon X";
+myCar.color = RED;
+```
+
+### Non-default Values in C Enums
+In C, enums (enumerations) are used to define a set of named integer constants. By default, the first name in an enum is assinged the 
+integer value 0, and each subsequent name is assigned an incremented integer value. However, it is possible to assign specific integer values
+to enum numbers. This can be useful when the specific number representation of a constant is important, such as defining program exit status codes.
+
+#### Examples
+Defining specific values for enum members:
+```c
+typedef enum {
+    RED = 55,
+    GREEN = 176,
+    BLUE = 38
+} Color;
+```
+
+Mixing specific and default values:
+```c
+typedef enum {
+    START = 10,
+    MIDDLE, // 11
+    END // 12
+} Progress;
+```
+
 ## Unions
 
 ### Summary
