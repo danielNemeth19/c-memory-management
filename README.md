@@ -258,21 +258,111 @@ typedef enum {
     END // 12
 } Progress;
 ```
+### Enumns and Switch Statements in C
+In C, enums can be effectively used with switch statements to manage control flow based on named constants, avoiding the use of
+"magic numbers" and increasing code readability. Enums provide clear, descriptive names for values, making code easier to understand and maintain.
+Switch statements evaluate a variable against a list of cases, executing the block of code corresponding to the matching case.
+
+Each case in a switch statement typically ends with a `break` to prevent fallthrough, where control passes into the next case. However,
+deliberate fallthrough is possible by omitting `break`, allowing multiple cases to execute the same block of code.
+
+#### Examples
+Basic switch statement with an enum:
+```c
+enum LogLevel {
+    LOG_DEBUG,
+    LOG_INFO,
+    LOG_WARN,
+    LOG_ERROR
+}
+
+void logMessage(enum LogLevel level) {
+    switch (level) {
+        case LOG_DEBUG:
+            printf("Debug logging enabled\n");
+            break;
+        case LOG_INFO:
+            printf("Info logging enabled\n");
+            break;
+        case LOG_WARN:
+            printf("Warning logging enabled\n");
+            break;
+        case LOG_ERROR:
+            printf("Error logging enabled\n");
+            break;
+        default:
+            printf("Unknown log level\n");
+    }
+}
+```
+Switch statement with intentional fallthrough:
+```c
+void handleError(int errorCode) {
+    switch (errorCode) {
+        case 1:
+        case 2:
+        case 3:
+            printf("Minor error occured. Please try again.\n");
+            break;
+        case 4:
+        case 5:
+            printf("Major error occured. Restart required.\n");
+            break;
+        default:
+            printf("Unknown error.\n");
+    }
+}
+```
+### Size of Enum in C
+In C, the `sizeof` operator can be used on enums to determine their size in memory. Typically, enums are stored as integers (`int`),
+but if an enums's value exceeds the range of an `int`, a larger integer type like `unsigned int` or `long` may be used by the compiler.
+This ensures that all possible enum values can be stored. Enums represent a set of named constants and, from the compiler's perspective,
+they are simply integers with  a more readable name.
+
+#### Examples
+Defining and using enums with sizeof:
+```c
+#include <stdio.h>
+
+enum Size {
+    SMALL,
+    MEDIUM,
+    LARGE,
+    EXTRA_LARGE
+};
+
+int main() {
+    printf("Size of Size enum: %zu bytes\n", sizeof(enum Size));
+    return 0;
+}
+```
+Enum with large values and checking size:
+```c
+#include <stdio.h>
+
+enum BigNumbers {
+    HUGE = 21474836448, // Larger than typical `int` range
+    GIANT,
+    COLOSSAL
+};
+
+int main() {
+    printf("Size of BigNumbers enum: %zu bytes\n", sizeof(enum BigNumbers));
+    return 0;
+}
+```
 
 ## Unions
 
 ### Summary
 
-Unions in C allow a single variable to store one of several types, but only one type at a time.
+Unions in C allow a single variable to store one of several types, but only one type at a time. Unlike structs,
+which allocate memory for each field, a union shares the same memory for all of its fields, and only enough space is reserved
+to store the largest member. This means writing to one field will overwrite the others, and you should only access the field that
+you most recently set. The C compiler uses the list of possible types in a union to determine the maximum memory required.
+This feature is useful for memory-efficient data storage when you know only one of the fields will be used at any time.
 
-Unlike structs, which allocate memory for each field,
-- a union shares the same memory for all of its fields
-- only enough space is reserved to store the largest member
-- writing to one field will overwrite the others -> only recently set field should be accessed
-- the C compiler uses the list of possible types in a union to determine the maximum memory required
-- this makes unions memory-efficient data storage when we know that only one field will be used at any time
-
-### Examples
+#### Examples
 
 ```c
 typedef union {
@@ -286,6 +376,53 @@ printf("Age: %d\n", person.age); // Age: 30
 
 // Accessing a non-set field results in undefined behavior
 printf("Name: %s\n", person.name); // Undefined behavior
+```
+
+### Union size in C
+Unions in C allow for different data types to be stored in the same memory location. The size of a union is determined by the
+size of its largest member. This can lead to inefficient memory use if the union frequently stores smaller data types. For example,
+a union with an `int` and a `char` array of 256 bytes will always allocate enough memory to accomodate the `char` array, even if
+only `int` is used most of the time.
+
+#### Examples
+Union with different field sizes:
+```c
+// This union will always allocate 256 bytes, the size of the largest type
+typedef union IntOrErrMessage {
+    int data;
+    char err[256];
+} int_or_err_message_t;
+
+```
+
+### Helper Fields in C Unions
+In C, unions allow you to store different data types in the same memory location. A unique use of unions is to create "helper"
+fields that provide multiple ways to access the same piece of memory. For example, you can define a union with a struct and a
+primitive data type that both occupy the same memory space. This enables reading and writing to the memory via different views:
+one offering invidual component access and the other providing access to the whole data at once.
+
+In the example given a union named `Color` has both a `struct` representing RGBA components and a `uint32_t` representation for
+the full color. This is efficient as it uses only 4 bytes for both fields, allowing either method to access or modify the color
+data depending on your needs.
+
+#### Example
+Defining a union with a struct and a full data representation:
+```c
+typedef union {
+    struct {
+        uint8_t red;
+        uint8_t green;
+        uint8_t blue;
+        uint8_t alpha;
+    } components;
+    uint32_t rgba;
+} ColorUnion;
+
+ColorUnion color;
+color.rgba = 0xFF00FF00; // set color using rgba
+printf("Red: %d\n", color.components.red); // access red component
+// Red: 0
+// accessing `red` is possible because both fields in the union is exactly 32 bytes
 ```
 
 ## Stack and Heap
