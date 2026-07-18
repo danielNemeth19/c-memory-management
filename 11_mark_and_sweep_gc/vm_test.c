@@ -59,9 +59,31 @@ void test_vm_free(void) {
     vm_free(vm);
 }
 
+void test_new_vm(void) {
+    vm_t *vm = vm_new();
+    assert(int_equal(vm->frames->count, 0));
+    vm_new_frame(vm);
+    assert(int_equal(vm->frames->count, 1));
+    frame_free(vm->frames->data[0]);
+    vm_free(vm);
+}
+
+void test_vm_new_frame(void) {
+    vm_t *vm = vm_new();
+    frame_t *frame = vm_new_frame(vm);
+    assert(ptr_not_null(frame->references, "References must be allocated"));
+    assert(int_equal(frame->references->count, 0));
+    assert(frame->references->capacity > 0);
+    assert(ptr_not_null(frame->references->data, "References stack backing array must be allocated"));
+    frame_free(frame);
+    vm_free(vm);
+}
+
 int main(void) {
     test_vm_new();
     test_vm_free();
+    test_new_vm();
+    test_vm_new_frame();
     printf("All tests passed.\n");
     return 0;
 }
