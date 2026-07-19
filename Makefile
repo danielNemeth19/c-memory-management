@@ -31,7 +31,7 @@ test-refcounting:
 	gcc -fsanitize=address 10_refcounting_gc/snekobject.c 10_refcounting_gc/snekobject_test.c -o test_suite.o && ./test_suite.o
 
 test-vm:
-	gcc -fsanitize=address 11_mark_and_sweep_gc/vm.c 11_mark_and_sweep_gc/vm_test.c 11_mark_and_sweep_gc/stack.c -o test_suite.o && ./test_suite.o
+	gcc -fsanitize=address 11_mark_and_sweep_gc/vm.c 11_mark_and_sweep_gc/vm_test.c 11_mark_and_sweep_gc/stack.c 11_mark_and_sweep_gc/sneknew.c -o test_suite.o && ./test_suite.o
 
 clean:
 	rm -rf *.o *.out

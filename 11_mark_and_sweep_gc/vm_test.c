@@ -1,4 +1,6 @@
-#include "vm.h"
+#include "sneknew.h"
+#include "snekobject.h"
+#include "vm.c"
 #include <assert.h>
 #include <stdbool.h>
 #include <string.h>
@@ -79,11 +81,22 @@ void test_vm_new_frame(void) {
     vm_free(vm);
 }
 
+void test_new_object(void) {
+    vm_t *vm = vm_new();
+    snek_object_t *obj = new_snek_integer(vm, 5);
+    assert(int_equal(obj->kind, INTEGER));
+    assert(ptr_not_null(vm->objects->data[0], "Object must be allocated"));
+    assert(ptr_equal(vm->objects->data[0], obj, "Object must be tracked"));
+    free(obj);
+    vm_free(vm);
+}
+
 int main(void) {
     test_vm_new();
     test_vm_free();
     test_new_vm();
     test_vm_new_frame();
+    test_new_object();
     printf("All tests passed.\n");
     return 0;
 }
