@@ -1,6 +1,5 @@
 #include "sneknew.h"
 #include "snekobject.h"
-#include "vm.c"
 #include <assert.h>
 #include <stdbool.h>
 #include <string.h>
@@ -53,20 +52,13 @@ void test_vm_new(void) {
     vm_t *vm = vm_new();
     assert(int_equal(vm->frames->capacity, 8));
     assert(int_equal(vm->objects->capacity, 8));
+    assert(int_equal(vm->frames->count, 0));
+    assert(int_equal(vm->objects->count, 0));
     vm_free(vm);
 }
 
 void test_vm_free(void) {
     vm_t *vm = vm_new();
-    vm_free(vm);
-}
-
-void test_new_vm(void) {
-    vm_t *vm = vm_new();
-    assert(int_equal(vm->frames->count, 0));
-    vm_new_frame(vm);
-    assert(int_equal(vm->frames->count, 1));
-    frame_free(vm->frames->data[0]);
     vm_free(vm);
 }
 
@@ -77,7 +69,6 @@ void test_vm_new_frame(void) {
     assert(int_equal(frame->references->count, 0));
     assert(frame->references->capacity > 0);
     assert(ptr_not_null(frame->references->data, "References stack backing array must be allocated"));
-    frame_free(frame);
     vm_free(vm);
 }
 
@@ -87,16 +78,30 @@ void test_new_object(void) {
     assert(int_equal(obj->kind, INTEGER));
     assert(ptr_not_null(vm->objects->data[0], "Object must be allocated"));
     assert(ptr_equal(vm->objects->data[0], obj, "Object must be tracked"));
-    free(obj);
+    vm_free(vm);
+}
+
+void test_array_freed(void) {
+    vm_t *vm = vm_new();
+    new_snek_array(vm, 3);
+    vm_free(vm);
+}
+
+void test_frames_are_freed(void) {
+    vm_t *vm = vm_new();
+    vm_new_frame(vm);
+    vm_new_frame(vm);
+    vm_new_frame(vm);
     vm_free(vm);
 }
 
 int main(void) {
     test_vm_new();
     test_vm_free();
-    test_new_vm();
     test_vm_new_frame();
     test_new_object();
+    test_array_freed();
+    test_frames_are_freed();
     printf("All tests passed.\n");
     return 0;
 }
