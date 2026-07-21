@@ -95,6 +95,32 @@ void test_frames_are_freed(void) {
     vm_free(vm);
 }
 
+void test_one_ref(void) {
+    vm_t *vm = vm_new();
+    frame_t *frame = vm_new_frame(vm);
+    snek_object_t *obj = new_snek_integer(vm, 10);
+    assert(int_equal(frame->references->count, 0));
+    frame_reference_object(frame, obj);
+    assert(int_equal(frame->references->count, 1));
+    assert(ptr_equal(obj, frame->references->data[0], "Should be same object"));
+    vm_free(vm);
+}
+
+void test_multi_ref(void) {
+    vm_t *vm = vm_new();
+    frame_t *frame = vm_new_frame(vm);
+    snek_object_t *obj1 = new_snek_integer(vm, 10);
+    snek_object_t *obj2 = new_snek_integer(vm, 11);
+
+    assert(int_equal(frame->references->count, 0));
+    frame_reference_object(frame, obj1);
+    frame_reference_object(frame, obj2);
+    assert(int_equal(frame->references->count, 2));
+    assert(ptr_equal(obj1, frame->references->data[0], "Should be same object"));
+    assert(ptr_equal(obj2, frame->references->data[1], "Should be same object"));
+    vm_free(vm);
+}
+
 int main(void) {
     test_vm_new();
     test_vm_free();
@@ -102,6 +128,8 @@ int main(void) {
     test_new_object();
     test_array_freed();
     test_frames_are_freed();
+    test_one_ref();
+    test_multi_ref();
     printf("All tests passed.\n");
     return 0;
 }
