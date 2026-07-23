@@ -1,5 +1,6 @@
 #include "sneknew.h"
 #include "snekobject.h"
+#include "vm.h"
 #include <assert.h>
 #include <stdbool.h>
 #include <string.h>
@@ -121,6 +122,23 @@ void test_multi_ref(void) {
     vm_free(vm);
 }
 
+void test_is_marked_field_exists(void) {
+    vm_t *vm = vm_new();
+    snek_object_t *obj1 = new_snek_integer(vm, 10);
+    snek_object_t *obj2 = new_snek_integer(vm, 20);
+    (void)obj1->is_marked;
+    (void)obj2->is_marked;
+    vm_free(vm);
+}
+void test_is_marked_is_false(void) {
+    vm_t *vm = vm_new();
+    snek_object_t *obj1 = new_snek_integer(vm, 10);
+    snek_object_t *obj2 = new_snek_integer(vm, 20);
+    assert(obj1->is_marked == false);
+    assert(obj2->is_marked == false);
+    vm_free(vm);
+}
+
 int main(void) {
     test_vm_new();
     test_vm_free();
@@ -130,6 +148,8 @@ int main(void) {
     test_frames_are_freed();
     test_one_ref();
     test_multi_ref();
+    test_is_marked_field_exists();
+    test_is_marked_is_false();
     printf("All tests passed.\n");
     return 0;
 }
