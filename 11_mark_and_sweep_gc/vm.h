@@ -11,6 +11,16 @@ typedef struct StackFrame {
     stack_t *references;
 } frame_t;
 
+// main functions for garbage collection
+void mark(vm_t *vm);
+void trace(vm_t *vm);
+void sweep(vm_t *vm);
+
+// this is the function that gets called to actually do the garbage collection,
+// but is just composed of `mark`, `trace`, `sweep`.
+void vm_collect_garbage(vm_t *vm);
+
+
 vm_t *vm_new();
 void vm_free(vm_t *vm);
 void vm_track_object(vm_t *vm, snek_object_t *obj);

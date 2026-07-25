@@ -3,6 +3,20 @@
 
 #include "vm.h"
 #include "snekobject.h"
+#include <stdbool.h>
+#include <stdio.h>
+
+void mark(vm_t *vm) {
+    stack_t *frames = vm->frames;
+    for (int i = 0; i < frames->count; i++) {
+        frame_t *frame = frames->data[i];
+        stack_t *references = frame->references;
+        for (int y = 0; y < references->count; y++) {
+            snek_object_t *obj = references->data[y];
+            obj->is_marked = true;
+        }
+    }
+}
 
 void frame_reference_object(frame_t *frame, snek_object_t *obj) {
     stack_push(frame->references, obj);
@@ -20,13 +34,13 @@ vm_t *vm_new() {
 
 void vm_free(vm_t *vm) {
     stack_t *frames = vm->frames;
-    for (int i = 0; i < frames->count ; i++) {
+    for (int i = 0; i < frames->count; i++) {
         frame_t *f = frames->data[i];
         frame_free(f);
     }
     stack_free(vm->frames);
     stack_t *objects = vm->objects;
-    for (int i = 0; i < objects->count ; i++) {
+    for (int i = 0; i < objects->count; i++) {
         snek_object_t *obj = objects->data[i];
         snek_object_free(obj);
     }
