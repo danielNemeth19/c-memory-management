@@ -18,6 +18,40 @@ void mark(vm_t *vm) {
     }
 }
 
+void trace_blacken_object(stack_t *gray_objects, snek_object_t *ref) {
+    switch (ref->kind) {
+    case INTEGER: {
+        return;
+    }
+    case FLOAT: {
+        return;
+    }
+    case STRING: {
+        return;
+    }
+    case VECTOR3: {
+        trace_mark_object(gray_objects, ref->data.v_vector3.x);
+        trace_mark_object(gray_objects, ref->data.v_vector3.y);
+        trace_mark_object(gray_objects, ref->data.v_vector3.z);
+    }
+    case ARRAY: {
+        for (size_t i = 0; i < ref->data.v_array.size; i++) {
+            trace_mark_object(gray_objects, ref->data.v_array.elements[i]);
+        }
+    }
+    default:
+        return;
+    }
+}
+
+void trace_mark_object(stack_t *gray_objects, snek_object_t *ref) {
+    if (ref == NULL || ref->is_marked) {
+        return;
+    }
+    ref->is_marked = true;
+    stack_push(gray_objects, ref);
+}
+
 void frame_reference_object(frame_t *frame, snek_object_t *obj) {
     stack_push(frame->references, obj);
 }
