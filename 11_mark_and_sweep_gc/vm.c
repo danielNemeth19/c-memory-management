@@ -18,6 +18,25 @@ void mark(vm_t *vm) {
     }
 }
 
+void trace(vm_t *vm) {
+    stack_t *gray_objects = stack_new(8);
+    if (gray_objects == NULL) {
+        return;
+    }
+    stack_t *objects = vm->objects;
+    for (int i = 0; i < objects->count; i++) {
+        snek_object_t *obj = objects->data[i];
+        if (obj->is_marked) {
+            stack_push(gray_objects, obj);
+        }
+    }
+    while (gray_objects->count > 0) {
+        void *item = stack_pop(gray_objects);
+        trace_blacken_object(gray_objects, item);
+    }
+    stack_free(gray_objects);
+}
+
 void trace_blacken_object(stack_t *gray_objects, snek_object_t *ref) {
     switch (ref->kind) {
     case INTEGER: {
@@ -30,9 +49,16 @@ void trace_blacken_object(stack_t *gray_objects, snek_object_t *ref) {
         return;
     }
     case VECTOR3: {
-        trace_mark_object(gray_objects, ref->data.v_vector3.x);
-        trace_mark_object(gray_objects, ref->data.v_vector3.y);
-        trace_mark_object(gray_objects, ref->data.v_vector3.z);
+        if (ref->data.v_vector3.x) {
+            trace_mark_object(gray_objects, ref->data.v_vector3.x);
+        }
+        if (ref->data.v_vector3.y) {
+            trace_mark_object(gray_objects, ref->data.v_vector3.y);
+        }
+        if (ref->data.v_vector3.z) {
+            trace_mark_object(gray_objects, ref->data.v_vector3.z);
+        }
+        return;
     }
     case ARRAY: {
         for (size_t i = 0; i < ref->data.v_array.size; i++) {
