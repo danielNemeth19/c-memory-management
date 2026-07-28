@@ -183,6 +183,78 @@ void test_mark_multi_frame(void) {
     vm_free(vm);
 }
 
+void test_trace_vector(void) {
+    vm_t *vm = vm_new();
+    frame_t *frame = vm_new_frame(vm);
+
+    snek_object_t *x = new_snek_integer(vm, 5);
+    snek_object_t *y = new_snek_integer(vm, 5);
+    snek_object_t *z = new_snek_integer(vm, 5);
+    snek_object_t *vector = new_snek_vector3(vm, x, y, z);
+
+    // nothing is marked yet
+    assert(x->is_marked == false);
+    assert(y->is_marked == false);
+    assert(z->is_marked == false);
+    assert(vector->is_marked == false);
+
+    // after referencing and marking, the
+    // vector should be marked, but not the contents
+    frame_reference_object(frame, vector);
+    mark(vm);
+    assert(x->is_marked == false);
+    assert(y->is_marked == false);
+    assert(z->is_marked == false);
+    assert(vector->is_marked == true);
+
+    // after tracing all objects needs to be marked
+    trace(vm);
+    assert(x->is_marked == true);
+    assert(y->is_marked == true);
+    assert(z->is_marked == true);
+    assert(vector->is_marked == true);
+
+    vm_free(vm);
+}
+
+void test_trace_array(void) {
+    vm_t *vm = vm_new();
+    frame_t *frame = vm_new_frame(vm);
+
+    snek_object_t *item_1 = new_snek_integer(vm, 5);
+    snek_object_t *item_2 = new_snek_integer(vm, 5);
+    snek_object_t *item_3 = new_snek_integer(vm, 5);
+    snek_object_t *array = new_snek_array(vm, 3);
+
+    snek_array_set(array, 0, item_1);
+    snek_array_set(array, 1, item_2);
+    snek_array_set(array, 2, item_3);
+
+    // nothing is marked yet
+    assert(item_1->is_marked == false);
+    assert(item_2->is_marked == false);
+    assert(item_3->is_marked == false);
+    assert(array->is_marked == false);
+
+    // after referencing and marking, the
+    // array should be marked, but not the contents
+    frame_reference_object(frame, array);
+    mark(vm);
+    assert(item_1->is_marked == false);
+    assert(item_2->is_marked == false);
+    assert(item_3->is_marked == false);
+    assert(array->is_marked == true);
+
+    // after tracing all objects needs to be marked */
+    trace(vm);
+    assert(item_1->is_marked == true);
+    assert(item_2->is_marked == true);
+    assert(item_3->is_marked == true);
+    assert(array->is_marked == true);
+
+    vm_free(vm);
+}
+
 int main(void) {
     test_vm_new();
     test_vm_free();
@@ -196,6 +268,8 @@ int main(void) {
     test_is_marked_is_false();
     test_mark_multi_frame();
     test_mark_multi_frame();
+    test_trace_vector();
+    test_trace_array();
     printf("All tests passed.\n");
     return 0;
 }
