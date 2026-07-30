@@ -255,6 +255,57 @@ void test_trace_array(void) {
     vm_free(vm);
 }
 
+void test_trace_nested(void) {
+    vm_t *vm = vm_new();
+    frame_t *frame = vm_new_frame(vm);
+
+    snek_object_t *array = new_snek_array(vm, 2);
+    snek_object_t *obj1 = new_snek_string(vm, "test 1");
+    snek_object_t *obj2 = new_snek_string(vm, "test 2");
+
+    snek_array_set(array, 0, obj1);
+    snek_array_set(array, 1, obj2);
+
+    snek_object_t *array2 = new_snek_array(vm, 2);
+    snek_object_t *obj3 = new_snek_string(vm, "test 1");
+    snek_object_t *obj4 = new_snek_string(vm, "test 2");
+
+    snek_array_set(array2, 0, obj3);
+    snek_array_set(array2, 1, obj4);
+
+    snek_object_t *combined_array = new_snek_array(vm, 2);
+    snek_array_set(combined_array, 0, array);
+    snek_array_set(combined_array, 1, array2);
+
+    frame_reference_object(frame, combined_array);
+    mark(vm);
+    trace(vm);
+
+    assert(array->is_marked == true);
+    assert(obj1->is_marked == true);
+    assert(obj2->is_marked == true);
+    assert(array2->is_marked == true);
+    assert(obj3->is_marked == true);
+    assert(obj4->is_marked == true);
+    vm_free(vm);
+}
+
+void test_trace_mark_object_already_marked(void) {
+    vm_t *vm = vm_new();
+    stack_t *gray_objects = stack_new(8);
+    snek_object_t *obj = new_snek_integer(vm, 7);
+
+    assert(ptr_not_null(gray_objects, "Must be allocated"));
+    assert(ptr_not_null(obj, "Must be allocated"));
+
+    obj->is_marked = true;
+    trace_mark_object(gray_objects, obj);
+    assert(gray_objects->count == 0);
+
+    stack_free(gray_objects);
+    vm_free(vm);
+}
+
 int main(void) {
     test_vm_new();
     test_vm_free();
@@ -270,6 +321,8 @@ int main(void) {
     test_mark_multi_frame();
     test_trace_vector();
     test_trace_array();
+    test_trace_nested();
+    test_trace_mark_object_already_marked();
     printf("All tests passed.\n");
     return 0;
 }
