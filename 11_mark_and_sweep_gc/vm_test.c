@@ -306,6 +306,17 @@ void test_trace_mark_object_already_marked(void) {
     vm_free(vm);
 }
 
+void test_trace_unreachable_cycle(void) {
+    vm_t *vm = vm_new();
+    snek_object_t *unreachable = new_snek_array(vm, 1);
+    snek_array_set(unreachable, 0, unreachable);
+
+    mark(vm);
+    trace(vm);
+    assert(unreachable->is_marked == false);
+    vm_free(vm);
+}
+
 int main(void) {
     test_vm_new();
     test_vm_free();
