@@ -6,6 +6,25 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+void sweep(vm_t *vm) {
+    for (size_t i = 0; i < vm->objects->count; i++) {
+        snek_object_t *obj = vm->objects->data[i];
+        if (obj->is_marked) {
+            obj->is_marked = false;
+        } else {
+            snek_object_free(obj);
+            vm->objects->data[i] = NULL;
+        }
+    }
+    stack_remove_nulls(vm->objects);
+}
+
+void vm_collect_garbage(vm_t *vm) {
+    mark(vm);
+    trace(vm);
+    sweep(vm);
+}
+
 void mark(vm_t *vm) {
     stack_t *frames = vm->frames;
     for (int i = 0; i < frames->count; i++) {
@@ -116,6 +135,10 @@ void vm_track_object(vm_t *vm, snek_object_t *obj) {
 }
 
 void vm_frame_push(vm_t *vm, frame_t *frame) { stack_push(vm->frames, frame); }
+
+frame_t *vm_frame_pop(vm_t *vm) {
+    return stack_pop(vm->frames);
+}
 
 frame_t *vm_new_frame(vm_t *vm) {
     frame_t *frame = malloc(sizeof(frame_t));

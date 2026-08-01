@@ -46,7 +46,7 @@ void stack_remove_nulls(stack_t *stack) {
             stack->data[new_count++] = stack->data[i];
         }
     }
-    // Update the count to refect the new number of elements
+    // Update the count to reflect the new number of elements
     stack->count = new_count;
 
     // Zeroing out the remamining slots

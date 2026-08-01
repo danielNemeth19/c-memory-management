@@ -317,6 +317,19 @@ void test_trace_unreachable_cycle(void) {
     vm_free(vm);
 }
 
+void test_simple(void) {
+    vm_t *vm = vm_new();
+    frame_t *f1 = vm_new_frame(vm);
+    snek_object_t *s = new_snek_string(vm, "I wish I knew how to type");
+    frame_reference_object(f1, s);
+    // nothing should be collected because
+    // frame haven't be freed yet
+    vm_collect_garbage(vm);
+    frame_free(vm_frame_pop(vm));
+    vm_collect_garbage(vm);
+    vm_free(vm);
+}
+
 int main(void) {
     test_vm_new();
     test_vm_free();
@@ -334,6 +347,7 @@ int main(void) {
     test_trace_array();
     test_trace_nested();
     test_trace_mark_object_already_marked();
+    test_simple();
     printf("All tests passed.\n");
     return 0;
 }
