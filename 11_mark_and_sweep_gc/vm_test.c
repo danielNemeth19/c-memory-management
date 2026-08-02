@@ -317,16 +317,75 @@ void test_trace_unreachable_cycle(void) {
     vm_free(vm);
 }
 
-void test_simple(void) {
+void test_simple_collect_garbage(void) {
     vm_t *vm = vm_new();
     frame_t *f1 = vm_new_frame(vm);
     snek_object_t *s = new_snek_string(vm, "I wish I knew how to type");
     frame_reference_object(f1, s);
-    // nothing should be collected because
-    // frame haven't be freed yet
+    // nothing should be collected because the frame haven't be freed yet
+    // what should happen:
+    //  - mark will mark the object, as the frame is pushed
+    //  - in trace, nothing really to do as obj is a string - there's no nested
+    //  object to mark
+    //  - in sweep, the object is not freed as it's is marked -> `is_marked` is
+    //  set to false (so next run of mark can handle it)
     vm_collect_garbage(vm);
+    assert(int_equal(vm->objects->count, 1));
+    assert(vm->objects->data[0] == s);
+
+    // freeing frame -> the frames stack of pointers is freed, so obj is
+    // considered as not reachable
+    //  - mark will not mark the object, as frame is gone
+    //  - in trace, obj is skipped in processing since last sweep `is_marked` is
+    //  false
+    //  - now in sweep, the object is freed as it's not marked
     frame_free(vm_frame_pop(vm));
     vm_collect_garbage(vm);
+    assert(int_equal(vm->objects->count, 0));
+    vm_free(vm);
+}
+
+void test_full_collect_garbage(void) {
+    vm_t *vm = vm_new();
+    frame_t *f1 = vm_new_frame(vm);
+    frame_t *f2 = vm_new_frame(vm);
+    frame_t *f3 = vm_new_frame(vm);
+
+    snek_object_t *s1 = new_snek_string(vm, "This string goes to frame1");
+    frame_reference_object(f1, s1);
+
+    snek_object_t *s2 = new_snek_string(vm, "This string goes to frame1");
+    frame_reference_object(f2, s2);
+
+    snek_object_t *s3 = new_snek_string(vm, "This string goes to frame1");
+    frame_reference_object(f3, s3);
+
+    snek_object_t *i1 = new_snek_integer(vm, 11);
+    snek_object_t *i2 = new_snek_integer(vm, 22);
+    snek_object_t *i3 = new_snek_integer(vm, 33);
+    snek_object_t *v = new_snek_vector3(vm, i1, i2, i3);
+
+    frame_reference_object(f2, v);
+    frame_reference_object(f3, v);
+
+    assert(int_equal(vm->objects->count, 7));
+
+    // only free the top frame (f3)
+    frame_free(vm_frame_pop(vm));
+    vm_collect_garbage(vm);
+    // only s3 should be gone
+    assert(int_equal(vm->objects->count, 6));
+
+    // freeing frame f2 -> 5 more objects should be gone, only s1 should stay
+    frame_free(vm_frame_pop(vm));
+    vm_collect_garbage(vm);
+    assert(int_equal(vm->objects->count, 1));
+    assert(vm->objects->data[0] == s1);
+
+    // freeing last frame -> all should be gone
+    frame_free(vm_frame_pop(vm));
+    vm_collect_garbage(vm);
+    assert(int_equal(vm->objects->count, 0));
     vm_free(vm);
 }
 
@@ -347,7 +406,8 @@ int main(void) {
     test_trace_array();
     test_trace_nested();
     test_trace_mark_object_already_marked();
-    test_simple();
+    test_simple_collect_garbage();
+    test_full_collect_garbage();
     printf("All tests passed.\n");
     return 0;
 }

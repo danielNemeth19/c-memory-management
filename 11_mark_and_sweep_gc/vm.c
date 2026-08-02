@@ -6,6 +6,12 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+void vm_collect_garbage(vm_t *vm) {
+    mark(vm);
+    trace(vm);
+    sweep(vm);
+}
+
 void sweep(vm_t *vm) {
     for (size_t i = 0; i < vm->objects->count; i++) {
         snek_object_t *obj = vm->objects->data[i];
@@ -17,12 +23,6 @@ void sweep(vm_t *vm) {
         }
     }
     stack_remove_nulls(vm->objects);
-}
-
-void vm_collect_garbage(vm_t *vm) {
-    mark(vm);
-    trace(vm);
-    sweep(vm);
 }
 
 void mark(vm_t *vm) {
@@ -38,6 +38,7 @@ void mark(vm_t *vm) {
 }
 
 void trace(vm_t *vm) {
+    // we create a stack for the objects to examine - instead of recursion
     stack_t *gray_objects = stack_new(8);
     if (gray_objects == NULL) {
         return;
@@ -49,6 +50,9 @@ void trace(vm_t *vm) {
             stack_push(gray_objects, obj);
         }
     }
+    // let's make sure that nested objects are also marked
+    // nested objects will be pushed to the gray_objects stack mid iteration through `trace_mark_object`
+    // that's how the need for recursion is eliminated - newly pushed objects will be cheched until count is 0
     while (gray_objects->count > 0) {
         void *item = stack_pop(gray_objects);
         trace_blacken_object(gray_objects, item);
