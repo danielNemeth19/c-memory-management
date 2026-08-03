@@ -1,5 +1,32 @@
 # Learning memory management in C
 
+## Basics
+### C Program Structure
+In C, the entry point for every program is the `main` functions, unlike Python, which begins execution at the top of the file.
+The simplest C program includes an `int main` function that returns an interger exit code,
+with `0` indicating successful execution. C enforces strict syntax rules, such as using semicolon to terminate statements and
+curly braces `{}` to define the body of functions. However, C ignores whitespace.
+
+Printing in C requires using the `printf` function from the `stdio.h` library. This function allows formatted output,
+and explict newlines must be added to strings to achieve line breaks, contrary to Python's `print()` function, which automatically
+appends a newline.
+
+#### Examples
+```c
+#include <stdio.h>
+
+int main() {
+    printf("Program in C!\n");
+    return 0;
+}
+```
+### C is compiled
+C is a compiled language, meaning the source code is transformed into machine code by a compiler before it can be executed.
+This process catches certain errors at compile time, preventing the program from running if there are issues like syntax errors
+or undeclared functions. Unlike interpreted laguanges, where code execution happens line-by-line, C's compilation process ensures
+that the entire program is free of basic errors before it even starts running. This can help catch mistakes early in the development
+process, although runtime errors and logical errors still need to be managed.
+
 ## Pointers
 ### Memory and Variable Addresses in C
 In computing, an address refers to a specific location in memory, which can be thought of as an array of bytes.
@@ -640,3 +667,5 @@ int main() {
     // number2 is now 10
 }
 ```
+### Generic swap (Using memcpy in C)
+to be added
