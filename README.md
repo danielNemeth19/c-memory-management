@@ -27,6 +27,111 @@ or undeclared functions. Unlike interpreted laguanges, where code execution happ
 that the entire program is free of basic errors before it even starts running. This can help catch mistakes early in the development
 process, although runtime errors and logical errors still need to be managed.
 
+### Comments in C
+C supports two types of comments:
+* single-line comments: Use `//` to comment out a single line.
+* multi-line comments: Use `/*` to start a comment and `*/` to end it. All text between `/*` and `*/` will be ignored, allowing
+for comments spanning multiple lines.
+
+### Basic types
+C provides several basic data types to work with numerical and character data. The primary types are include:
+* `int`: Represents integer values typically used for counting and indexing
+* `float`: Represents floating-point numbers for decimal values and is useful in calculations requiring precision.
+* `char`: Represents a single character and typically uses single quotes, e.g. `'a'`.
+* `char *`: Represents a pointer to a character array, often used to handle strings although C
+does not have a dedicated sting type.
+
+#### Examples
+```c
+int age = 23;
+float salary = 234.34;
+char grade = 'A';
+char *name = 'John Doe';
+
+printf("Age: %s\n", age);
+printf("Salary: %.2f\n", salary);
+printf("Grade: %c\n", grade);
+printf("Name: %s\n", name);
+```
+
+### Strings in C
+In C, strings are implemented as arrays of characters, terminated with a null character (`\0`). There is no dedicated `string`
+type. Instead, you use a pointer to a `char` to represent strings. This is denoted as `char *`. String literals must be enclosed
+in double quotes (`"`), whereas single quotes (`'`) are used for individual characters.
+
+#### Examples
+```c
+char *name = 'John Doe';
+printf("Name: %s\n", name);
+```
+In this code `name` is a pointer to the first character of the string `"John Doe`.
+
+### Printing in C
+In C, the `printf` function is used for formatted output, allowing to print variables by specifying their types with format specifiers.
+Unlike Python's f-strings, C requires explicit format specifiers such as `%d` for integers, `%c` for characters, `%f` for
+floating-point numbers, and `%s` for strings. Each format specifier must match the corresponding variable type being printed.
+Additionally, C does not automatically add a newline character to output, so you must manually include `\n` to print stdout.
+
+| Specifier | Used For                                         |
+|-----------|--------------------------------------------------|
+| %c        | a single character                               |
+| %s        | a string                                         |
+| %hi       | short (signed)                                   |
+| %hu       | short (unsigned)                                 |
+| %Lf       | long double                                      |
+| %n        | prints nothing                                   |
+| %d        | a decimal integer (assumes base 10)              |
+| %i        | a decimal integer (detects the base automatically)|
+| %o        | an octal (base 8) integer                        |
+| %x        | a hexadecimal (base 16) integer                  |
+| %p        | an address (or pointer)                          |
+| %f        | a floating point number for floats               |
+| %u        | int unsigned decimal                             |
+| %e        | a floating point number in scientific notation   |
+| %E        | a floating point number in scientific notation   |
+| %%        | the % symbol                                     |
+
+#### Examples
+```c
+int age = 23;
+float height = 5.9;
+char grade = 'A';
+char *name = 'John Doe';
+
+printf("Age: %s\n", age);
+printf("Height: %.1f\n", height);
+printf("Grade: %c\n", grade);
+printf("Name: %s\n", name);
+```
+
+### Compilation and Types in C
+In C, variables types are explicit and immutable once declared. Unlike Python, where a variable's type can be changed dynamically,
+C requires the type to be defined at declaration and does not allow it to change. This ensures type safety and consistency.
+Attempts to assign a value of a different type to an existing variable will result in a compilation error.
+
+
+#### Examples
+```c
+#include <stdio.h>
+
+int main() {
+    char *max_threads = "5";
+    // Illegal type change
+    // max_threads = 5; // This will raise compilation error
+}
+Correct usage with consistent types:
+```c
+#include <stdio.h>
+
+int main() {
+    int max_threads = 5;
+    printf("Max threads: %d\n", max_threads);
+
+    char *max_threads_str = "5";
+    printf("Max threads: %s\n", max_threads_str);
+}
+```
+
 ## Pointers
 ### Memory and Variable Addresses in C
 In computing, an address refers to a specific location in memory, which can be thought of as an array of bytes.
@@ -42,7 +147,7 @@ Understanding memory addresses is crucial for working with pointers and managing
 
 
 ### Virtual Memory
-Virtual memory is an abstraction layer providede by the operating systems that makes it appear as though a program has direct access
+Virtual memory is an abstraction layer provided by the operating systems that makes it appear as though a program has direct access
 to the entire memory space of a machine. In reality, the operating system manages this access, enabling several advantages.
 
 Key Concepts
