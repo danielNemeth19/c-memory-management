@@ -132,6 +132,29 @@ int main() {
 }
 ```
 
+### Variables
+In C each variable must be declared with a specific data type. The data type of a variable cannot be changed after it is declared.
+However, the value of the a variable can be updated multiple times as long as the new value is the same type.
+
+When updating the value of a variable, there is no need to specify the data type again; doing so will result in compilation error.
+
+#### Examples
+Incorrect variable redeclaration:
+```c
+int main() {
+    int y = 5;
+    float y = 3.14; // compilation error: redeclaration of `y` with a different type
+}
+```
+
+Correct variable value update:
+```c
+int main() {
+    int y = 5;
+    y = 10; // valid update of variable `y`
+    y = 20; 
+```
+
 ## Pointers
 ### Memory and Variable Addresses in C
 In computing, an address refers to a specific location in memory, which can be thought of as an array of bytes.
