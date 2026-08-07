@@ -155,6 +155,89 @@ int main() {
     y = 20; 
 ```
 
+### Constants
+In C, variables can be declared as constants using the `const` qualifier. A constant variable's value cannot
+be altered after its initial assignment. This feature is useful for values that should remain unchanged
+throughout the program, ensuring data integrity and clarity in code.
+
+Attempting to modify a constant variable will result in a compilation error.
+
+#### Examples
+Declaring and using a constant:
+```c
+int main() {
+    const int maxSpeed = 120;
+
+    // Attempting to modify maxSpeed will cause a compilation error
+    maxSpeed = 180; // -> error
+    return 0;
+}
+
+```
+
+### Functions in C
+In C, functions define the types for their arguments and return values, making the type enforcement 
+a key feature. The syntax for defining a function includes specifying the return type, function name,
+and the types of its parameters. Casting is the process of converting one data type to another,
+and it is explicitly used in C by placing the type in parentheses before the value to be converted.
+
+#### Examples
+Defining and using a function in C:
+```c
+int multiply(int x, int y) {
+    return x * y;
+}
+
+int main() {
+    int product = multiply(5, 3);
+    printf("Product: %d\n", product);
+    // Product: 15
+    return 0;
+}
+```
+Function with casting:
+```c
+float divide(int numerator, int denominator) {
+    return (float)numerator / denominator;
+}
+
+int main() {
+    float result = divide(10, 3);
+    printf("Quotient: %f\n", result);
+    // Quotient: 3.33333
+    return 0;
+}
+```
+
+### Using Void in C
+In C, `void` is used to define functions that either do not return a value or do not take any arguments.
+When a function is declared with a `void` return type, it indicates that the function does not return a value.
+Conversely, using `void` as a parameter in a function signature specifies that the function does not accept
+any arguments. Unlike Python's `None`, `void` cannot be used as a value or assigned to a variable.
+
+#### Examples
+Function with a void parameter:
+```c
+int get_integer(void) {
+    return 42;
+}
+```
+Function with a void return type:
+```c
+int print_integer(int x) {
+    printf("this is an int: %d\n", x);
+}
+```
+
+### Math Operators in C
+C provides a variety of arithmetic operators for performing mathematical operations: addition (`+`),
+subtraction (`-`), multiplication (`*`), and division (`/`). Compound assignment operators such as
+`+=`, `-=`, `*=`, `/=` are also supported for updating and assigning values in a single step.
+
+C also introduces increment (`++`) and decrement (`--`) operators, which can be used in postfix (e.g. `x++`)
+and prefix (e.g. `++x`) forms. Postfix increments or decrements the value after it is used in an expression,
+whereas prefix does it before its used in an expression.
+
 ## Pointers
 ### Memory and Variable Addresses in C
 In computing, an address refers to a specific location in memory, which can be thought of as an array of bytes.
