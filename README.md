@@ -25,7 +25,7 @@ C is a compiled language, meaning the source code is transformed into machine co
 This process catches certain errors at compile time, preventing the program from running if there are issues like syntax errors
 or undeclared functions. Unlike interpreted laguanges, where code execution happens line-by-line, C's compilation process ensures
 that the entire program is free of basic errors before it even starts running. This can help catch mistakes early in the development
-process, although runtime errors and logical errors still need to be managed.
+pUsing the ternary operator to find the maximum of two numbers:rocess, although runtime errors and logical errors still need to be managed.
 
 ### Comments in C
 C supports two types of comments:
@@ -61,10 +61,10 @@ in double quotes (`"`), whereas single quotes (`'`) are used for individual char
 
 #### Examples
 ```c
-char *name = 'John Doe';
+char *name = "John Doe";
 printf("Name: %s\n", name);
 ```
-In this code `name` is a pointer to the first character of the string `"John Doe`.
+In this code `name` is a pointer to the first character of the string `"John Doe"`.
 
 ### Printing in C
 In C, the `printf` function is used for formatted output, allowing to print variables by specifying their types with format specifiers.
@@ -237,6 +237,186 @@ subtraction (`-`), multiplication (`*`), and division (`/`). Compound assignment
 C also introduces increment (`++`) and decrement (`--`) operators, which can be used in postfix (e.g. `x++`)
 and prefix (e.g. `++x`) forms. Postfix increments or decrements the value after it is used in an expression,
 whereas prefix does it before its used in an expression.
+
+#### Examples
+Using arithmetic operators:
+```c
+int a = 10, b = 5;
+int sum = a + b; // 15
+int difference = a - b; // 5
+int product = a * b; // 50
+int quotient = a / b; // 2
+```
+Postfix vs Prefix
+```c
+int x = 5;
+int y = x++; // y becomes 5, then x becomes 6
+
+int a = 5;
+int b = ++a; // a becomes 6, then b becomes 6
+```
+Casting an integer to a float:
+```c
+int num = 10;
+float floatNum = (float)num; // floatNum is 10.0
+```
+
+### Conditional statements
+If statements provide basic control flow in C, allowing you to execute code based on conditions.
+An if statement evaluates a condition and executes a block of code if the condition is true.
+You can extend it with `else if` and `else` to handle multiple conditions.
+
+The syntax for an if statement requires braces `{}` around the code block, but they can be omitted for
+a single statement. However, omitting the braces can lead to errors and is generally discouraged for
+readability.
+
+#### Examples
+Basic if statement:
+```c
+int temperature = 75;
+
+if (temperature) {
+    printf("too hot\n");
+} else if (temperature < 70) {
+    printf("too cold\n");
+} else {
+    printf("just right\n");
+}
+```
+
+### Logical operators
+Logical operators in C allow you to combine multiple conditions. The AND operator (`&&`) returs true
+only if both operands are true. The OR operator (`||`) returns true if at least one operand is true.
+The NOT operator (`!`) inverts a boolean value.
+
+C uses short-circuit evaluation: with `&&`, if the left operand is false, the right operand is never
+evaluated. With `||`, if the left operand is true, the right operand is never evaluated. This behavior
+is useful for preventing errors and improving performance.
+
+#### Example
+Using logical AND:
+```c
+int age = 25;
+int has_license = 1;
+
+if (age >= 18 && has_license) {
+    printf("Can drive legally\n");
+}
+
+```
+
+Using logical OR:
+```c
+int is_weekend = 0;
+int is_holiday = 1;
+if (is_weekend || is_holiday) {
+    printf("No work today!\n");
+```
+
+Using logical NOT:
+```c
+int is_raining = 0;
+if (!is_raining) {
+    printf("Good weather for a walk\n");
+```
+
+Combining multiple operators:
+```c
+int reputation = 150;
+int has_2fa = 1;
+int is_banned = 0;
+
+if ((reputation >= 100 && has_2fa) || !is_banned) {
+    printf("Access granted!\n");
+}
+```
+
+### Ternary operators
+The ternary operator in C is a concise way to perform conditional operations. It evaluates a condition
+and selects one of two values based on the result of the evaluation. The ternary syntax is structured
+as follows:
+* `condition ? value_if_true : value_if_false`
+
+The expression evaluates to `value_if_true` if the condition is true, and `value_if_false` if the condition
+is false. It is often used for simple conditional assignments where an `if-else` statement would be
+unnecessarily verbose.
+
+#### Example
+Using the ternary operator to find the maximum of two numbers:
+```c
+int score1 = 90;
+int score2 = 94;
+int highest_score = score1 > score2 ? score1 : score2;
+printf("Highest score is: %d\n", highest_score);
+```
+Assigning a status based on age:
+```c
+int age = 20;
+const char *status = age >= 18 ? "Adult" : "Minor";
+printf("Status: %s\n", status);
+```
+
+### Type sizes in C
+In C, the size of the data type in memory is not consistent across all systems. The architecture of the
+system, such as whether it is 32-bit or 64-bit, affects type sizes. For instance, an `int`, might
+be 4 bytes on a 32-bit system but 8 bytes on a 64-bit system. The `sizeof` operator can be used to
+determine the exact size of a type on a specific platform. Some data types have consistent sizes, like
+`char`, which is always 1 byte. The basic C data types include:
+
+* `char`: Always 1 byte, represents a single character, and can be signed or unsigned.
+* `float`: Typically 4 bytes, represents a single-precision floating-point number.
+* `double`: Typically 8 bytes, represents a double-precision floating-point number.
+
+#### Example
+Determining type size with `sizeof`:
+```c
+#include <stdio.h>
+int main () {
+    printf("Size of char: %zu byte\n", sizeof(char));
+    printf("Size of float: %zu byte\n", sizeof(float));
+    printf("Size of double: %zu byte\n", sizeof(double));
+
+    return 0;
+}
+```
+
+### For loop in C
+A `for` loop in C is used to execute a block of code repeatedly. It consists of three main components:
+initialization, condition, and final-expression. This control flow structure allows iteration over
+a range of values, executing a specified block of code for each iteration. Unlike Python, C does not
+have a direct "for each" loop, so you must use indices when iterating over arrays or lists.
+
+#### Examples
+Basic `for` loop iterating over indices:
+```c
+#include <stdio.h>
+
+int main() {
+    for (int i = 0; i < 3; i++) {
+        printf("Index %d\n", i);
+    }
+    return 0;
+}
+```
+
+Iterating over an array using a `for` loop:
+```c
+#include <stdio.h>
+
+int main() {
+    int numbers[] = {10, 20, 30};
+    int size = sizeof(numbers) / sizeof(numbers[0]);
+
+    for (int i = 0; i < size; i++) {
+        printf("Number: %d\n", numbers[i]);
+    }
+    return 0;
+}
+// Output:
+// Number: 10
+// Number: 20
+// Number: 30
+```
 
 ## Pointers
 ### Memory and Variable Addresses in C
