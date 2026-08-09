@@ -418,6 +418,96 @@ int main() {
 // Number: 30
 ```
 
+### While loops in C
+A `while` loop in C is used to repeatedly execute a block of code as long as a specified condition
+is true. The loop checks the condition before each iteration, and if the condition is false initially
+or becomes false during execution, the loop terminates. If the condition remains true indefinitely,
+the loop may result in an infinite execution.
+
+#### Examples
+Basic example of a `while` loop:
+```c
+#include <stdio.h>
+
+int main() {
+    int count = 3;
+    while (count) {
+        printf("Countdown: %d\n", count);
+        count--;
+    }
+    return 0;
+}
+```
+
+### Do while loop in C
+A `do while` loop in C is a control flow statement that allows code to be executed repeatedly based on
+a given boolean condition, ensuring that the loop body executes at least once. The condition is evaluated
+after the execution of the loop body. This makes the `do while` loop distinct from the `while` loop,
+which evaluates the condition before the loop body executes.
+
+#### Examples
+Basic `do while` loop:
+```c
+int i = 0;
+do {
+    printf("i = %d\n", i);
+    i++;
+} while (i < 3);
+// Output:
+// i = 0
+// i = 1
+// i = 2
+```
+Single execution of loop body when condition is initially false:
+```c
+int i = 10;
+do {
+    printf("i = %d\n", i);
+    i++;
+} while (i < 5);
+// Output:
+// i = 10
+```
+
+### Pragma Once and Header Guards in C
+In C, multiple inclusions of the same header file can lead to redefinition errors. Two methods to prevent
+this are `#pragma once` and header guards.
+
+`#pragma once` is a preprocessor directive included at the top of a header file to ensure the file is
+only included once. It's a modern and less error-prone solution that works with most compilers.
+
+Header guards are another approach using preprocessor directives. They involve defining a unique macro
+at the top of the file, and wrapping the file's contents within `#ifndef`, `#define`, and `#endif`
+directives. If the macro is already defined (i.e. the file has been included), the guard prevents
+reprocessing.
+
+While both methods are effective, `#pragma once` is preferred for its simplicity.
+
+#### Examples
+Using `#pragma once`:
+```c
+// coordinates.h
+#pragma once
+
+struct Point {
+    int x;
+    int y;
+};
+```
+
+Using header guards:
+```c
+// coordinates.h
+#ifndef COORDINATES_H
+#define COORDINATES_H
+
+struct Point {
+    int x;
+    int y;
+};
+#endif
+```
+
 ## Pointers
 ### Memory and Variable Addresses in C
 In computing, an address refers to a specific location in memory, which can be thought of as an array of bytes.
