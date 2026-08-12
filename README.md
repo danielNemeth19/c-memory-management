@@ -508,6 +508,75 @@ struct Point {
 #endif
 ```
 
+## Structs
+### Structs in C
+In C, structs allow you to group together related variables under a single name, creating a more organized and manageable way
+to handle complex data. Structs are particularly useful for grouping multiple data types into a single logical unit. For instance,
+instead of managing individual variables for coordinates, a struct can encapsulate all three variables (x, y, z) into one entity.
+
+A struct is defined using the `struct` keyword, followed by a name and a set of curly braces containing the fields of the
+struct. This allows for improved code readability, easier parameter passing, and the ability to return complex data from
+functions.
+
+#### Examples
+Defining a simple struct:
+```c
+struct Point {
+    int x;
+    int y;
+    int z;
+};
+```
+Using a struct for a distance function:
+```c
+struct Point {
+    int x;
+    int y;
+    int z;
+};
+
+int distance(struct Point p1, struct Point p2) {
+    // calculate distance usin the points
+}
+
+int main() {
+    struct Point start = {1, 2, 3};
+    struct Point end = {4, 5, 6};
+
+    int dist = distance(start, end);
+    printf("Distance: %d\n", dist);
+}
+```
+
+### Stuct initializers
+Stucts can be initialized multiple ways. Here are common methods:
+1. **Zero initializer**: Initializes all fields to zero.
+2. **Positional initializer**: Fields are initialized in the order they are defined, requiring knowledge of the struct's layout.
+3. **Designated initializer**: Preferred for readability and flexibility, allows initializing fields by name, which beneficial
+if the struct changes.
+
+#### Examples
+Zero Initializer Example:
+```c
+// Sets all fields to zero or equivalent null values
+struct City c = {0};
+```
+
+Positional Initializer Example:
+```c
+// Initializes fields in declared order
+struct City c = {"San Francisco", 37, -122};
+```
+Designated Initializer Example:
+```c
+// Initializes fields by name
+struct City c = {
+    .name = "San Francisco",
+    .lat = 37,
+    .lon = -122
+};
+```
+
 ## Pointers
 ### Memory and Variable Addresses in C
 In computing, an address refers to a specific location in memory, which can be thought of as an array of bytes.
