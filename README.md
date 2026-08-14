@@ -577,6 +577,83 @@ struct City c = {
 };
 ```
 
+### Returning multiple values with Structs
+In C, functions cannot return multiple values directly like in some other languages. However, a similar effect can be achieved
+by returning a `struct`. A `struct` in C is a complex date type that groups different variables, potenitally of different types,
+under a single name.
+
+By returning a `struct` from a function, you can effectively return multiple values. This involves defining a `struct` that
+contains all the values you wish to return, populating it within the function, and then returning the `struct`.
+
+#### Example
+Returning a struct from a function:
+```c
+struct Point {
+    int x;
+    int y;
+};
+
+struct Point scale_point(int x, int y, int factor) {
+    struct Point p = { .x = x * factor, .y = y * factor };
+    return p;
+}
+```
+This demonstatrates how multiple values can be scaled inside a function and returned as a single `struct`.
+
+
+### Typedef
+The `typedef` keyword in C allows you to create an alias for data types, making code more concise and readable. This is particularly
+useful with `stuct` definitions, as it enables the use of shorter type names. By using `typedef`, you can avoid repeatedly writing
+`stuct` with the type name, simplifying the declaration and usage of structures.
+
+When defining a struct with `typedef`, it's common to use a suffix like `_t` to denote a type. You can also define a struct
+without a name when using `typedef`, although it is a convention to name the name the struct for clarity.
+
+#### Example
+Defining and using a struct with `typedef`:
+```c
+typedef struct {
+    char *name;
+    float weight;
+} pastry_t;
+
+pastry_t croissant;
+croissant.name = "croissant";
+croissant.weight = 0.087;
+```
+
+### Sizeof
+The `sizeof` operator in C is used to determine the size, in bytes, of a data type or `struct`. It calculates the total memory
+required, including any padding added for alignment. Structs are stored in contiguous memory, meaning fields are laid out one
+after the other. However, in mixed-type structs, padding is often introduced to align data efficiently, which can vary based
+on the compiler and system architecture.
+
+#### Examples
+Using `sizeof` with a `struct`:
+```c
+typedef struct Coordinate {
+    int x;
+    int y;
+    int z;
+} coordinate_t;
+
+// Output might be 12 bytes
+printf("Size of coordinate_t: %zu bytes\n", sizeof(coordinate_t));
+```
+Memory layout example with padding:
+```c
+typedef struct Human {
+    char first_inital;
+    int age;
+    double height;
+} human_t;
+
+// Output might be larger than the sum of individual sizes due to padding
+printf("Size of human_t: %zu bytes\n", sizeof(human_t));
+
+```
+
+
 ## Pointers
 ### Memory and Variable Addresses in C
 In computing, an address refers to a specific location in memory, which can be thought of as an array of bytes.
