@@ -598,7 +598,7 @@ struct Point scale_point(int x, int y, int factor) {
     return p;
 }
 ```
-This demonstatrates how multiple values can be scaled inside a function and returned as a single `struct`.
+This demonstrates how multiple values can be scaled inside a function and returned as a single `struct`.
 
 
 ### Typedef
@@ -653,20 +653,55 @@ printf("Size of human_t: %zu bytes\n", sizeof(human_t));
 
 ```
 
+### Struct padding
+Struct padding in C refers to the extra memory added by the compiler between the fields of a struct to align data according to
+hardware architecture requirements. This alignent can lead to increased memory usage. Field ordering can influence padding:
+arranging fields from largest to smallest generally helps minimize padding, making the struct more memory efficient.
+
+Structs are laid out contiguously in memory, but due to alignment rules, padding may be inserted to optimize access speed.
+Understanding and optimizing struct layout is crucial for tight memory management and performance improvement in C programming.
+
+#### Examples
+Poortly aligned stucture vs. better aligned structure:
+```c
+typedef struct {
+    char a;
+    double b;
+    char c;
+    char d;
+    long e;
+    char f;
+} poorly_aligned_t;
+
+// Padding can be reduced by reordering (largest->smallest)
+typedef struct {
+    double b;
+    long e;
+    char a;
+    char c;
+    char d;
+    char f;
+} better_t;
+```
+The second version (`better_t`) is better aligned because its members are ordered
+from largest to smallest type. This minimizes the amount of padding the compiler
+must insert to satisfy alignment requirements for each member. This way the struct
+uses less memory and is more efficient for the CPU to access, as there is less
+wasted space due to padding.
+
 
 ## Pointers
 ### Memory and Variable Addresses in C
 In computing, an address refers to a specific location in memory, which can be thought of as an array of bytes.
-Each byte in memory has a unique address represented as a number. These addresses are frequently displayed in a Hexadecimal format
-(base 16) rather than decimal (base 10) because it is more compact and easier to work with in the context of memory management.
-For example 0xfff8 in Hexadecimal corresponds to `65,528` in decimal.
+Each byte in memory has a unique address represented as a number. These addresses are frequently displayed in a Hexadecimal
+format (base 16) rather than decimal (base 10) because it is more compact and easier to work with in the context of memory
+management. For example 0xfff8 in Hexadecimal corresponds to `65,528` in decimal.
 
 In C, variables are human-readable names that reference data stored in memory.
 Memory can be visualized as a large array of bytesm where each piece of data is stored at a specific index or address.
 The address-of-operator (`&`) is used to retrieve the memory address of a variable. Memory addresses are crucial for understanding pointers and memory management.
 
 Understanding memory addresses is crucial for working with pointers and managing memory in laguanges like C.
-
 
 ### Virtual Memory
 Virtual memory is an abstraction layer provided by the operating systems that makes it appear as though a program has direct access
@@ -709,33 +744,15 @@ int main() {
 }
 ```
 
-### Pointer dereferencing
-Dereferencing a pointer accesses the value stored at the memory address it points to, using the `*` operator. This operator is used
-both to declare pointer types and to access the data being pointed to, which can cause confusion.
-
-#### Examples
-Declaring and using pointers:
-```c
-int meaining_of_life = 42;
-int *ptr_to_mol = &meaining_of_life;
-int value_at_pointer = *ptr_to_mol; // Dereference to get value at the pointer
-printf("value_at_pointer: %d\n", value_at_pointer);  // 42
-```
-
-Changing a value with pointers:
-```c
-int speed = 60;
-int *pointer_to_speed = &speed;  
-*pointer_to_speed = 100;  // Dereferencing to update value stored in speed
-```
-
 ### Why pointers in C?
-Pointers in C are crucial for manipulating data structures like structs. When structs are passed to functions, they are passed by value,
-meaming a copy is created, and modifications do not affect the original data unless the struct is returned or pointers are used.
-Using pointers allows you to modifiy the original data without creating a copy, makeing functions more efficient by directly manipulating the memory address of the data.
+Pointers in C are crucial for manipulating data structures like structs. When structs are passed to functions, they are passed
+by value, meaning a copy is created, and modifications do not affect the original data unless the struct is returned or pointers
+are used. Using pointers allows you to modifiy the original data without creating a copy, making functions more efficient by
+directly manipulating the memory address of the data.
 
 #### Examples
-In Python, objects like class instances are inherently passed by reference, allowing modifications within functions to affect the original object:
+In Python, objects like class instances are inherently passed by reference, allowing modifications within functions to affect
+the original object:
 ```python
 class Coordinate:
     def __init__(self, x, y, z):
@@ -768,6 +785,27 @@ struct Coordinate c = {1, 2, 3};
 c = coordinate_update_and_return(c, 4);
 printf("%d\n", c.x);  // 4
 ```
+
+### Pointer dereferencing
+Dereferencing a pointer accesses the value stored at the memory address it points to, using the `*` operator. This operator is used
+both to declare pointer types and to access the data being pointed to, which can cause confusion.
+
+#### Examples
+Declaring and using pointers:
+```c
+int meaining_of_life = 42;
+int *ptr_to_mol = &meaining_of_life;
+int value_at_pointer = *ptr_to_mol; // Dereference to get value at the pointer
+printf("value_at_pointer: %d\n", value_at_pointer);  // 42
+```
+
+Changing a value with pointers:
+```c
+int speed = 60;
+int *pointer_to_speed = &speed;
+*pointer_to_speed = 100;  // Dereferencing to update value stored in speed
+```
+
 
 ### Arrow Operator
 In C, when you have a struct, fields are accessed using the dot (`.`). However, if you have a pointer to a struct, the arrow (`->`)
@@ -858,12 +896,75 @@ ptr += 2;
 printf("%d\n", *ptr);  // Output: 3
 ```
 
-In these examples, the pointer manipulation demonstatrates how you can traverse an array using pointer arithmetic, achieving the same results
+In these examples, the pointer manipulation demonstrates how you can traverse an array using pointer arithmetic, achieving the same results
 as with traditional array indexing.
+
+### Struct Arrays (Multibyte Arrays)
+In C, arrays of structs can be accessed using both indexing and pointer arithmetic. A struct's memory layout is determined by
+the size of its constituent types. Consider a `Coordinate` struct with three `int` members (`x`, `y`, `z`). An array of such
+structs can be indexed directly or accessed via pointers. The memory layout for an array of these structs reflects the byte
+size of each struct, determined by the number of bytes required for each `int`. Pointer arithmetic allows moving through the
+array by incrementing the pointer by the size of the struct.
+
+#### Examples
+Using indexing:
+```c
+typedef struct {
+    int x;
+    int y;
+    int z;
+} Coordinate;
+
+Coordinate points[3] = {
+    {1, 2, 3},
+    {4, 5, 6},
+    {7, 8, 9}
+};
+
+// Output: 4, 5, 6
+printf("points[1].x = %d, points[1].y = %d, points[1].z = %d\n", points[1].x, points[1].y, points[1].z);
+```
+Using Pointer Arithmetic:
+```c
+Coordinate *ptr = points;
+// Output: 4, 5, 6
+printf("points[1].x = %d, points[1].y = %d, points[1].z = %d\n", (ptr + 1)->x, (ptr + 1)->y, (ptr + 1)->z);
+```
+
+### Array casting
+Arrays can be viewed as pointers, allowing for type casting between different pointer types. This is possible because arrays
+store elements in contiguous memory locations. For instance, an array of structs can be cast to an array of basic data types,
+like integers, enabling direct access to their individual components in memory.
+
+When casting arrays, it's crucial to be mindful of bounds, as accessing memory outside allocated bounds leads to undefined
+behavior. This flexibility offers poweful capabilities bur require careful handling to prevent errors.
+
+#### Examples
+
+```c
+typedef struct {
+    int x;
+    int y;
+    int z;
+} coordinate_t;
+
+coordinate_t points[3] = {
+    {5, 4, 1},
+    {7, 3, 2},
+    {9, 6, 8}
+}
+// Cast to an integer pointer
+int *points_start = (int *)points;
+
+for (int i = 0; i < 9; i++) {
+    printf("points_start[%d] = %d\n", i, points_start[i]);
+}
+```
+This code demonstrates how to cast and iterate over an array of structs as if it were an array of integers, allowing direct
+access to each integer value within the structs.
 
 
 ## Enums
-
 ### Summary
 
 Enums in C allow you to create a set of named integer constants. They are defined using the `enum` keyword and can be made easier to use
