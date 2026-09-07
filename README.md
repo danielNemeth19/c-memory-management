@@ -963,6 +963,84 @@ for (int i = 0; i < 9; i++) {
 This code demonstrates how to cast and iterate over an array of structs as if it were an array of integers, allowing direct
 access to each integer value within the structs.
 
+### Pointer Size in C
+Pointers in C have a fixed size determined by the system architecture (e.g. 32-bit or 64-bit), regardless of the data type they
+point to. This is because pointers store memory addresses, and the address space size is consistent across all pointer types.
+On a 32-bit system, pointers are typically 4 bytes, while on a 64-bit system, they are typically 8 bytes.
+
+In contrast, arrays in C are a contiguous block of memory where each element has a specific size based on its data type. The
+total size of an array is the product of the number of elements and the size of each element. Therefore, while pointers have a 
+uniform size, array sizes vary based on their data types and the number of elements they contain.
+
+#### Examples
+Demonstration of pointer sizes:
+```c
+int *intPtr;
+char *charPtr;
+double *doublePtr;
+
+printf("Size of int pointer: %zu bytes\n", sizeof(intPtr));
+printf("Size of char pointer: %zu bytes\n", sizeof(charPtr));
+printf("Size of double pointer: %zu bytes\n", sizeof(doublePtr));
+// Output (on a 32-bit system):
+// Size of int pointer: 4 bytes
+// Size of char pointer: 4 bytes
+// Size of double pointer: 4 bytes
+```
+Demonstration of array sizes:
+```c
+int intArray[10];
+char charArray[10];
+double doubleArray[10];
+
+printf("Size of int array: %zu bytes\n", sizeof(intArray));
+printf("Size of char array: %zu bytes\n", sizeof(charArray));
+printf("Size of double array: %zu bytes\n", sizeof(doubleArray));
+// Output (on a 32-bit system):
+// Size of int array: 40 bytes
+// Size of char array: 10 bytes
+// Size of double array: 80 bytes
+```
+
+### Arrays Decay to Pointers
+In C, arrays can "decay" to pointers in certain contexts, meaning the array name becomes a pointer to its first element. This
+occurs when arrays are used in expressions that involve pointers or when they'are passed to functions. As a result, you cannot
+pass arrays by value to functions; instead, they decay to pointers.
+
+However, there are situations where arrays don't decay:
+* `sizeof` operator: It returns the size of the entire array, not just the a pointer
+* `&` operator: Taking the address of an array with `&arr` yields a pointer to the whole array
+* `intialization`: When an array is declared and initialized, it is fully allocated, not decayed to a pointer
+
+#### Examples
+Array decaying to Pointer:
+```c
+int numbers[3] = {1, 2, 3};
+int *pointer = numbers; // `numbers` decays to `int*`
+
+printf("%d\n", *(pointer + 1)); // Output: 2
+```
+
+Situations where arrays don't decay:
+```c
+int data[4] = {10, 20, 30, 40};
+
+printf("Size of data: %zu\n", sizeof(data)); // Outputs size of entire array
+printf("Size of &data: %zu\n", sizeof(&data)); // Outputs size of pointer array
+```
+
+### C Strings
+In C, strings are represented as arrays of characters, terminated by a null character (`\0`). This null terminator indicates
+the end of the string, as C strings do not store their length. The absence of explicit length means functions like `strlen`
+calculate a strings's length by iterating characters until the null terminator is encountered.
+
+Strings in C can be declared using either arrays or pointers. A string declared as a pointer points to the first character of
+the array. A common operation on strings is concatenation, which can be achieved using functions like `strcat`, or manually by
+appending characters from one string to another until the null terminator is reached.
+
+When manipulating C strings, it's crucial to handle memory allocation carefully to avoid buffer overflows, as C does not
+perform boundary checking on arrays.
+
 
 ## Enums
 ### Summary
